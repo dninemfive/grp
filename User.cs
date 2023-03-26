@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,5 +18,6 @@ namespace grp
             Id = (split[0], int.Parse(split[1]));
             Name = displayName ?? Id.name;
         }
+        public User((string id, string? name, string url, string height) tuple) : this(tuple.id, tuple.url, tuple.name, tuple.height) { }
     }
 }
