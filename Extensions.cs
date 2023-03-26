@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace grp
             return (leftParser(split[0]), rightParser(split[1]));
         }
         public static (T, T) SplitAndParse<T>(this string s, string delimiter, Func<string, T> parser) => s.SplitAndParse(delimiter, parser, parser);
-        private const int EXPECTED_TSV_LENGTH = 5;        
+        private const int EXPECTED_TSV_LENGTH = 5;
         public static (string id, string? name, string height, string weight) ParseTsvLine(this string s)
         {
             string[] split = s.Split("\t");
@@ -31,8 +32,14 @@ namespace grp
             string? name = string.IsNullOrEmpty(split[2]) ? null : split[2];
             return (split[1], name, split[3], split[4]);
         }
-        private const int W = -20;
-        public static string Readable(this (string a, string? b, string c, string d) t) => $"{t.a,W}{t.b ?? "(null)",W}{t.c,-128}{t.d,W}";
+        public static string Readable(this IEnumerable<(string s, int width)> enumerable) => Utils.Readable(enumerable.ToArray());
+        public static string Readable(this IEnumerable<string> strings, IEnumerable<int> widths) => Readable(strings.Zip(widths));
+        public static string Repeated(this char c, int times)
+        {
+            string result = "";
+            for (int i = 0; i < times; i++) result += c;
+            return result;
+        }
     }
     public static class Utils
     {
@@ -58,5 +65,14 @@ namespace grp
                 }
             }
         }
+        public static string Readable(params (string s, int width)[] values)
+        {
+            string result = "";
+            foreach ((string s, int width) in values)
+            {
+                result += s.PadRight(width);
+            }
+            return result;
+        }        
     }
 }
