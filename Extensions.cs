@@ -32,9 +32,10 @@ namespace grp
             string? name = string.IsNullOrEmpty(split[2]) ? null : split[2];
             return (split[1], name, split[3], split[4]);
         }
-        public static string Readable(this IEnumerable<(string? s, int width)> enumerable) 
-            => Utils.Readable(enumerable.Select(x => (x.s ?? "(actually null)", x.width)).ToArray());
-        public static string Readable(this IEnumerable<string?> strings, IEnumerable<int> widths) => Readable(strings.Zip(widths));
+        public static string Readable<T>(this IEnumerable<(T t, int width)> enumerable) 
+            => Utils.Readable(enumerable.ToArray());
+        public static string Readable<T>(this IEnumerable<T> values, IEnumerable<int> widths) => Readable(values.Zip(widths));
+        public static string Readable(this IEnumerable<ColumnInfo> values) => Readable(values.Select(x => (x.Name, x.Width)));
         public static string Repeated(this char c, int times)
         {
             string result = "";
@@ -66,12 +67,12 @@ namespace grp
                 }
             }
         }
-        public static string Readable(params (string s, int width)[] values)
+        public static string Readable<T>(params (T t, int width)[] values)
         {
             string result = "";
-            foreach ((string? s, int width) in values)
+            foreach ((T t, int width) in values)
             {
-                result += (s ?? "(actually null)").PadRight(width);
+                result += (t?.ToString() ?? "(actually null)").PadRight(width);
             }
             return result;
         }        
