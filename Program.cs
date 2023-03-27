@@ -3,4 +3,11 @@ using System.Net.Http;
 using System.Text.Json;
 Directory.CreateDirectory(Constants.ImageFolderPath);
 List<string> rawTsv = File.ReadAllLines(Constants.DataPath).ToList();
-TsvDocument document = new(new(new("timestamp", 24, key: true), ("discord id", 32), new("name", ), rawTsv));
+ColumnInfoSet columns = new(
+    ("timestamp", 24, ColumnType.Key),
+    ("discord id", 42),
+    ("display name", 32, ColumnType.Nullable),
+    ("height", 8),
+    ("url", 128)
+    );
+TsvDocument document = new(columns, rawTsv);

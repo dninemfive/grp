@@ -80,22 +80,22 @@ namespace grp
             }
         }
     }
+    public enum ColumnType { Normal, Key, Nullable }
     public record ColumnInfo
     {
-        public string Name { get; }
+        public string Name { get; }        
         public int Width { get; }
-        public bool IsKey { get; }
-        public bool MayBeNull { get; }
-        public ColumnInfo(string name, int width = 24, bool key = false, bool mayBeNull = false)
+        public ColumnType Type { get; }
+        public bool IsKey => Type is ColumnType.Key;
+        public bool MayBeNull => Type is ColumnType.Nullable;
+        public ColumnInfo(string name, int width = 24, ColumnType type = ColumnType.Normal)
         {
             Name = name;
             Width = width;
-            IsKey = key;
-            MayBeNull = mayBeNull;
         }
         public static implicit operator ColumnInfo(string s) => new(s);
         public static implicit operator ColumnInfo((string name, int width) tuple) => new(tuple.name, tuple.width);
-        public static implicit operator (string t, int width)(ColumnInfo ci) => (ci.Name, ci.Width);
+        public static implicit operator ColumnInfo((string name, int width, ColumnType type) tuple) => new(tuple.name, tuple.width, tuple.type);
     }
     public record ColumnInfoSet
     {
