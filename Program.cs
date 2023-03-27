@@ -2,12 +2,13 @@
 using System.Net.Http;
 using System.Text.Json;
 Directory.CreateDirectory(Constants.ImageFolderPath);
-List<string> rawTsv = File.ReadAllLines(Constants.DataPath).ToList();
+List<string> rawTsv = File.ReadAllLines(Constants.DataPath).Skip(1).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
     ("discord id", 42),
     ("display name", 32, ColumnType.Nullable),
-    ("height", 8),
-    ("url", 128)
+    ("url", 128),
+    ("height", 8)
     );
 TsvDocument document = new(columns, rawTsv);
+foreach (string s in document.Readable) Console.WriteLine(s);

@@ -70,7 +70,7 @@ namespace grp
             }
             Columns = columns;
         }
-        public TsvRow(ColumnInfoSet columns, string unparsed) : this(columns, unparsed.Split('\t').Zip(columns.Names).ToArray()) { }
+        public TsvRow(ColumnInfoSet columns, string unparsed) : this(columns, columns.Names.Zip(unparsed.Split('\t')).ToArray()) { }
         public string? this[string key] => columnValues[key];
         public IEnumerable<string?> this[IEnumerable<string> keys]
         {
@@ -92,6 +92,7 @@ namespace grp
         {
             Name = name;
             Width = width;
+            Type = type;
         }
         public static implicit operator ColumnInfo(string s) => new(s);
         public static implicit operator ColumnInfo((string name, int width) tuple) => new(tuple.name, tuple.width);
