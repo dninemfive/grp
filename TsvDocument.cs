@@ -16,6 +16,7 @@ namespace grp
         public IEnumerable<string> ColumnNames => Columns.InOrder.Select(x => x.Name);
         public IEnumerable<int> ColumnWidths => Columns.InOrder.Select(x => x.Width);
         public Dictionary<string, TsvRow> Data = new();
+        public IEnumerable<TsvRow> Rows => Data.Values;
         public TsvDocument(ColumnInfoSet columns, IEnumerable<string> data)
         {
             _columns = columns;

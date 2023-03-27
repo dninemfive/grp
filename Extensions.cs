@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -46,25 +47,33 @@ namespace grp
     public static class Utils
     {
         public static float Mean(params float[] numbers) => numbers.Aggregate((x, y) => x + y) / numbers.Length;
-        public static async Task Download(string url, string? targetPath = null)
+        public static async Task Download(string url, string? fileName = null)
         {
-            targetPath ??= Path.Join(Constants.ImageFolderPath, Path.GetFileName(url));
+            fileName ??= Path.GetFileName(url);
+            string targetPath = Path.Join(Constants.ImageFolderPath, fileName);
             Console.WriteLine($"Downloading {url} to {targetPath}...");
-            using HttpResponseMessage response = await Constants.Client.GetAsync(url);
-            Console.WriteLine($"\t{(response.IsSuccessStatusCode ? "✔️" : "❌")}\t{(int)response.StatusCode} {response.ReasonPhrase}");
-            if (response.IsSuccessStatusCode)
+            try
             {
-                try
+                using HttpResponseMessage response = await Constants.Client.GetAsync(url);
+                Console.WriteLine($"\t{(response.IsSuccessStatusCode ? "✔️" : "❌")}\t{(int)response.StatusCode} {response.ReasonPhrase}");
+                if (response.IsSuccessStatusCode)
                 {
-                    using Stream stream = await response.Content.ReadAsStreamAsync();
-                    using FileStream fs = new(targetPath, FileMode.Create);
-                    await stream.CopyToAsync(fs);
-                    Console.WriteLine("\tDownloaded.");
+                    try
+                    {
+                        using Stream stream = await response.Content.ReadAsStreamAsync();
+                        using FileStream fs = new(targetPath, FileMode.Create);
+                        await stream.CopyToAsync(fs);
+                        Console.WriteLine("\tDownloaded.");
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine($"\tDownload failed: {e.Message}");
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"\tDownload failed: {e.Message}");
-                }
+            }
+            catch (Exception e) 
+            {
+                Console.WriteLine($"\tFailed to contact `{url}`: {e.Message}");
             }
         }
         public static string Readable<T>(params (T t, int width)[] values)
