@@ -13,7 +13,8 @@ namespace grp
         public static readonly Regex Centimeters = new(@"\d+cm");
         // https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world
         public static readonly Height Default = new(Utils.Mean(171, 159));
-        public float InCentimeters { get; private set; }        
+        public float InCentimeters { get; private set; }
+        public float Ratio => InCentimeters / Default.InCentimeters;
         public Height(int feet, int inches)
         {
             int totalInches = feet * 12 + inches;

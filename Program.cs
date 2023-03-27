@@ -9,7 +9,7 @@ ColumnInfoSet columns = new(
     ("display name", 32, ColumnType.Nullable),
     ("url", 128),
     ("height", 8)
-    );
+);
 TsvDocument document = new(columns, rawTsv);
 foreach (string s in document.Readable) Console.WriteLine(s);
 foreach (TsvRow row in document.Rows)
