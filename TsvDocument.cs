@@ -11,19 +11,25 @@ namespace grp
 {
     internal class TsvDocument
     {
-        private readonly List<ColumnInfo> _columns;
-        public IEnumerable<ColumnInfo> Columns => _columns;
-        public IEnumerable<string> ColumnNames => Columns.Select(x => x.Name);
-        public IEnumerable<int> ColumnWidths => Columns.Select(x => x.Width);
+        private readonly ColumnInfoSet _columns;
+        public ColumnInfoSet Columns => _columns;
+        public IEnumerable<string> ColumnNames => Columns.InOrder.Select(x => x.Name);
+        public IEnumerable<int> ColumnWidths => Columns.InOrder.Select(x => x.Width);
         public Dictionary<string, TsvRow> Data = new();
-        public TsvDocument(IEnumerable<ColumnInfo> columns, IEnumerable<string> data)
+        public TsvDocument(ColumnInfoSet columns, IEnumerable<string> data)
         {
-            _columns = columns.ToList();
+            _columns = columns;
+            foreach (string s in data) Add(new TsvRow(columns, s));
         }
         public TsvRow this[string key] => Data[key];
         public void Add(TsvRow row)
         {
-
+            if (row.Columns != Columns) throw new Exception($"Row {row}'s columns do not match table {this}'s!");
+            Data[row.Key] = row;
+        }
+        public void Add(IEnumerable<TsvRow> rows)
+        {
+            foreach (TsvRow row in rows) Add(row);
         }
         public override string ToString()
         {
@@ -37,8 +43,8 @@ namespace grp
         {
             get
             {
-                yield return Columns.Readable();
-                yield return Columns.Select(x => ('='.Repeated(x.Name.Length), x.Width)).Readable();
+                yield return Columns.InOrder.Readable();
+                yield return Columns.InOrder.Select(x => ('='.Repeated(x.Name.Length), x.Width)).Readable();
                 foreach (TsvRow line in Data.OrderBy(x => x.Key).Select(x => x.Value)) yield return line[ColumnNames].Readable(ColumnWidths);
             }
         }
@@ -46,15 +52,25 @@ namespace grp
     internal class TsvRow
     {
         private readonly Dictionary<string, string?> columnValues = new();
-        public string Key { get; }
-        public TsvRow(params (ColumnInfo k, string v)[] entries)
+        // should never have this value because of validation on ColumnInfoSet
+        public string Key { get; } = "no key found";
+        public ColumnInfoSet Columns { get; }
+        public TsvRow(ColumnInfoSet columns, params (string k, string v)[] entries)
         {
-            if (entries.Select(x => x.k).Where(x => x.IsKey).Count() != 1) throw new Exception($"Tried to initialize TsvRow");
-            foreach((ColumnInfo k, string v) in entries)
+            foreach((string k, string v) in entries)
             {
-                if (!k.MayBeNull && v is null) throw new Exception($"Column {k.Name} is not marked as nullable, but has a null value!");
+                if(v is null)
+                {
+                    if (columns.IsKey(k)) throw new Exception($"Column {k} is the key column, but its value is null!");
+                    if(!columns.MayBeNull(k)) throw new Exception($"Column {k} is not marked as MayBeNull, but has a null value!");
+                }
+                // v cannot be null if IsKey() because an exception is thrown above if so
+                if (columns.IsKey(k)) Key = v!;
+                columnValues[k] = v;
             }
+            Columns = columns;
         }
+        public TsvRow(ColumnInfoSet columns, string unparsed) : this(columns, unparsed.Split('\t').Zip(columns.Names).ToArray()) { }
         public string? this[string key] => columnValues[key];
         public IEnumerable<string?> this[IEnumerable<string> keys]
         {
@@ -80,5 +96,28 @@ namespace grp
         public static implicit operator ColumnInfo(string s) => new(s);
         public static implicit operator ColumnInfo((string name, int width) tuple) => new(tuple.name, tuple.width);
         public static implicit operator (string t, int width)(ColumnInfo ci) => (ci.Name, ci.Width);
+    }
+    public record ColumnInfoSet
+    {
+        private readonly List<string> _order = new();
+        private readonly Dictionary<string, ColumnInfo> _columnInfos = new();
+        public ColumnInfoSet(params ColumnInfo[] columnInfos)
+        {
+            int keyCount = columnInfos.Where(x => x.IsKey).Count();
+            if (keyCount != 1) throw new Exception($"A ColumnInfoSet must have precisely 1 key column, not {keyCount}!");
+            foreach (ColumnInfo ci in columnInfos)
+            {
+                int nameCount = columnInfos.Where(x => x.Name == ci.Name).Count();
+                if (nameCount > 1) throw new Exception($"A ColumnInfoSet cannot have duplicate column names, but there are {nameCount} columns with {ci.Name}!");
+                _columnInfos[ci.Name] = ci;
+            }
+            _order = columnInfos.Select(x => x.Name).ToList();
+        }
+        public ColumnInfo this[string k] => _columnInfos[k];
+        public bool IsKey(string column) => this[column].IsKey;
+        public bool MayBeNull(string column) => this[column].MayBeNull;
+        public IEnumerable<ColumnInfo> InOrder => _order.Select(x => this[x]);
+        public IEnumerable<string> Names => _order;
+        public int Count => _order.Count;
     }
 }
