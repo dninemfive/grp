@@ -67,5 +67,10 @@ namespace grp
             }
             return result;
         }
+        public static Image LoadImage(string path)
+        {
+            using FileStream fs = File.OpenRead(path.InImageFolder());
+            return Image.Load(fs);
+        }
     }
 }

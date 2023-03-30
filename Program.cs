@@ -14,5 +14,7 @@ TsvDocument document = new(columns, rawTsv);
 foreach (string s in document.Readable) Console.WriteLine(s);
 foreach (TsvRow row in document.Rows)
 {
-    await Utils.Download(row["url"]!, $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}");
+    // await Utils.Download(row["url"]!, $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}");
 }
+using Image img = Utils.LoadImage("dninemfive#6790.png");
+img.MutateAndSaveTo((image) => image.Flip(FlipMode.Horizontal), "dninemfive#6790.png");

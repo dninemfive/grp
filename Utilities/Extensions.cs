@@ -49,5 +49,16 @@ namespace grp
             for (int i = 0; i < times; i++) result += c;
             return result;
         }
+        public static string InImageFolder(this string relativePath) => Path.Join(Constants.ImageFolderPath, relativePath);        
+        public static void SaveTo(this Image img, string path)
+        {
+            using FileStream fs = File.Open(path.InImageFolder(), FileMode.Create);
+            img.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
+        }
+        public static void MutateAndSaveTo(this Image img, Action<IImageProcessingContext> mutation, string path)
+        {
+            img.Mutate(mutation);
+            img.SaveTo(path);
+        }
     }
 }
