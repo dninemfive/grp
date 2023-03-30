@@ -7,13 +7,32 @@ using System.Text.RegularExpressions;
 
 namespace grp
 {
+    /// <summary>
+    /// Parses a string of in the format <c><em>x</em>'<em>y</em>"</c> or <c><em>z</em>cm</c> into a height in centimeters.
+    /// </summary>
     public class Height
     {
+        /// <summary>
+        /// Matches <c><em>x</em>'<em>y</em>"</c>. 
+        /// </summary>
         public static readonly Regex FeetAndInches = new(@"\d+'\d+" + '"');
+        /// <summary>
+        /// Matches <c><em>z</em>cm</c>.
+        /// </summary>
         public static readonly Regex Centimeters = new(@"\d+cm");
-        // https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world
+        /// <summary>
+        /// The default height used to calculate the <see cref="Ratio"/> to be used to scale images.
+        /// </summary>
+        /// <remarks>Calculated by averaging the amab and afab heights given
+        /// <see href="https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world">here</see>.</remarks>
         public static readonly Height Default = new(Utils.Mean(171, 159));
+        /// <summary>
+        /// The canonical height parsed, given in centimeters.
+        /// </summary>
         public float InCentimeters { get; private set; }
+        /// <summary>
+        /// The ratio of this height to the <see cref="Default"/>.
+        /// </summary>
         public float Ratio => InCentimeters / Default.InCentimeters;
         public Height(int feet, int inches)
         {

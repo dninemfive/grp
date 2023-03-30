@@ -7,9 +7,24 @@ using System.Drawing;
 
 namespace grp
 {
+    /// <summary>
+    /// Non-extension utility methods.
+    /// </summary>
     public static class Utils
     {
+        /// <summary>
+        /// Gets the mean of an arbitrary set of <see langword="float"/>s.
+        /// </summary>
+        /// <param name="numbers">An array of <see langword="float"/>s to be averaged.</param>
+        /// <returns>The <see href="https://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic mean</see> of the given <c>numbers</c>.</returns>
         public static float Mean(params float[] numbers) => numbers.Aggregate((x, y) => x + y) / numbers.Length;
+        /// <summary>
+        /// Attempts to download a file to the <see cref="Constants.ImageFolderPath">default image folder</see> and prints whether or not it was successful, 
+        /// as well as the response code.
+        /// </summary>
+        /// <param name="url">The URL of the file to download.</param>
+        /// <param name="fileName">The name the file should have when downloaded. If not specified, defaults to the name of the file specified in the <c>url</c>.</param>
+        /// <returns>A <see langword="void"/> <c>Task</c> to be <c>await</c>ed.</returns>
         public static async Task Download(string url, string? fileName = null)
         {
             fileName ??= Path.GetFileName(url);
@@ -39,18 +54,18 @@ namespace grp
                 Console.WriteLine($"\tFailed to contact `{url}`: {e.Message}");
             }
         }
-        public static string Readable<T>(params (T t, int width)[] values)
+        /// <summary></summary>
+        /// <typeparam name="T">The type of the objects to print.</typeparam>
+        /// <param name="values">An array holding the objects to print.</param>
+        /// <returns>A string corresponding to the objects <c>t</c> in order, with columns padded to <c>width</c>.</returns>
+        public static string InColumns<T>(params (T t, int width)[] values)
         {
             string result = "";
             foreach ((T t, int width) in values)
             {
-                result += (t?.ToString() ?? "(actually null)").PadRight(width);
+                result += t.PrintNullable().PadRight(width);
             }
             return result;
-        }
-        public static void Merge()
-        {
-            
         }
     }
 }
