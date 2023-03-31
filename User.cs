@@ -15,7 +15,7 @@ namespace grp
         public Image? Image { get; private set; }
         public Height Height { get; private set; }
         public string Url { get; private set; }
-        public User(TsvRow row)
+        private User(TsvRow row)
         {
             string[] split = row["discord id"]!.Split("#");
             Id = (split[0], int.Parse(split[1]));
@@ -23,7 +23,7 @@ namespace grp
             Url = row["url"]!;            
             Height = Height.Parse(row["height"]!);                     
         }
-        public async Task GetImage()
+        private async Task GetImage()
         {
             Image = await Utils.DownloadImage(Url, FileName);
             if (Image is null) return;
@@ -34,6 +34,12 @@ namespace grp
                 Position = AnchorPositionMode.Bottom,
                 Size = (Size)(Image.Size * Height.Ratio)
             }));
+        }
+        public static async Task<User> Parse(TsvRow row)
+        {
+            User result = new(row);
+            await result.GetImage();
+            return result;
         }
         public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
     }
