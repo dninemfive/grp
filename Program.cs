@@ -12,6 +12,7 @@ ColumnInfoSet columns = new(
 );
 TsvDocument document = new(columns, rawTsv);
 foreach (string s in document.Readable) Console.WriteLine(s);
+List<User> Users = new();
 foreach (TsvRow row in document.Rows)
 {
     await Utils.Download(row["url"]!, row.FileName());

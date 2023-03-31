@@ -19,7 +19,7 @@ namespace grp
             string[] split = row["discord id"]!.Split("#");
             Id = (split[0], int.Parse(split[1]));
             Name = row["display name"]! ?? Id.name;
-            Image = Utils.LoadImage(row.FileName());
+            Image = await Utils.DownloadImage(row["url"]!, row.FileName());
             Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Subtract, 1));
             Height = Height.Parse(row["height"]!);
             Image.Mutate((context) => context.Resize(new ResizeOptions()

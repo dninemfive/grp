@@ -23,8 +23,8 @@ namespace grp
         /// </summary>
         /// <param name="url">The URL of the file to download.</param>
         /// <param name="fileName">The name the file should have when downloaded. If not specified, defaults to the name of the file specified in the <c>url</c>.</param>
-        /// <returns>A <see langword="void"/> <c>Task</c> to be <c>await</c>ed.</returns>
-        public static async Task Download(string url, string? fileName = null)
+        /// <returns>The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.</returns>
+        public static async Task<string?> Download(string url, string? fileName = null)
         {
             fileName ??= Path.GetFileName(url);
             string targetPath = Path.Join(Paths.ImageFolder, fileName);
@@ -41,17 +41,25 @@ namespace grp
                         using FileStream fs = new(targetPath, FileMode.Create);
                         await stream.CopyToAsync(fs);
                         Console.WriteLine("\tDownloaded.");
+                        return targetPath;
                     }
                     catch (Exception e)
                     {
                         Console.WriteLine($"\tDownload failed: {e.Message}");
                     }
                 }
-            }
+            }            
             catch (Exception e)
             {
                 Console.WriteLine($"\tFailed to contact `{url}`: {e.Message}");
             }
+            return null;
+        }
+        public static async Task<Image?> DownloadImage(string url, string filename)
+        {
+            string? resultPath = await Download(url, filename);
+            if (resultPath is null) return null;
+            return LoadImage(resultPath);
         }
         /// <summary></summary>
         /// <typeparam name="T">The type of the objects to print.</typeparam>
