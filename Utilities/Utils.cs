@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Drawing;
 
 namespace grp
 {
@@ -28,7 +27,7 @@ namespace grp
         public static async Task Download(string url, string? fileName = null)
         {
             fileName ??= Path.GetFileName(url);
-            string targetPath = Path.Join(Constants.ImageFolderPath, fileName);
+            string targetPath = Path.Join(Paths.ImageFolder, fileName);
             Console.WriteLine($"Downloading {url} to {targetPath}...");
             try
             {
@@ -69,8 +68,26 @@ namespace grp
         }
         public static Image LoadImage(string path)
         {
-            using FileStream fs = File.OpenRead(path.InImageFolder());
+            if (!Path.IsPathFullyQualified(path)) path = path.InImageFolder(); 
+            using FileStream fs = File.OpenRead(path);
             return Image.Load(fs);
+        }
+        public static IEnumerable<Image> LoadImages(params string[] paths)
+        {
+            foreach (string path in paths) yield return LoadImage(path);
+        }
+        public static Image Merge(params Image[] images)
+        {
+            int width = images.Select(x => x.Width).Sum();
+            int height = images.Select(x => x.Height).Max();
+            Image result = new Image<Rgba32>(width, height);
+            int currentLeftSide = 0;
+            foreach(Image img in images)
+            {
+                result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, 0), 1));
+                currentLeftSide += img.Width;
+            }
+            return result;
         }
     }
 }

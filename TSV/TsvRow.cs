@@ -9,7 +9,7 @@ namespace grp
     /// <summary>
     /// Represents a single row in a <see cref="TsvDocument"/>.
     /// </summary>
-    internal class TsvRow
+    public class TsvRow
     {
         /// <summary>
         /// Holds the value of each column indexed by the column's name.

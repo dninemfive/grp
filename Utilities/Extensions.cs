@@ -49,7 +49,7 @@ namespace grp
             for (int i = 0; i < times; i++) result += c;
             return result;
         }
-        public static string InImageFolder(this string relativePath) => Path.Join(Constants.ImageFolderPath, relativePath);        
+        public static string InImageFolder(this string relativePath) => Path.Join(Paths.ImageFolder, relativePath);        
         public static void SaveTo(this Image img, string path)
         {
             using FileStream fs = File.Open(path.InImageFolder(), FileMode.Create);
@@ -60,5 +60,8 @@ namespace grp
             img.Mutate(mutation);
             img.SaveTo(path);
         }
+        public static IEnumerable<Image> LoadImages(this IEnumerable<string> paths) => Utils.LoadImages(paths.ToArray());
+        public static Image Merge(this IEnumerable<Image> images) => Utils.Merge(images.ToArray());
+        public static string FileName(this TsvRow row) => $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}";
     }
 }
