@@ -27,9 +27,9 @@ namespace grp
         {
             new(FeetAndInches, delegate(string s)
             {
-                string[] split = s.Split("'");
-                int feet = int.Parse(split.First());
-                int inches = int.Parse(split[1][..-1]);
+                string[] split = s.WithoutQuotes().Split("'");
+                int feet = int.Parse(split[0]);
+                int inches = int.Parse(split[1]);
                 return new(feet, inches);
             }),
             new(Centimeters, s => new(float.Parse(s[..-2])))
@@ -75,7 +75,7 @@ namespace grp
                     return true;
                 } catch(Exception e)
                 {
-                    Console.WriteLine($"{s} matched the regex {Regex} but parsing it failed: {e.Message}");
+                    Console.WriteLine($"`{s}` matched the regex {Regex} but parsing it failed: {e.Message}");
                     return false;
                 }
             }

@@ -15,7 +15,7 @@ foreach (string s in document.Readable) Console.WriteLine(s);
 List<User> Users = new();
 foreach (TsvRow row in document.Rows)
 {
-    await Utils.Download(row["url"]!, row.FileName());
+    Users.Add(await User.Parse(row));
 }
-using Image result = Directory.EnumerateFiles(Paths.ImageFolder).LoadImages().Merge();
+using Image result = Users.Select(x => x.Image!).Merge();
 result.SaveTo("result.png");

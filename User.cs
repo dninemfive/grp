@@ -20,7 +20,7 @@ namespace grp
             string[] split = row["discord id"]!.Split("#");
             Id = (split[0], int.Parse(split[1]));
             Name = row["display name"]! ?? Id.name;
-            Url = row["url"]!;            
+            Url = row["url"]!;
             Height = Height.Parse(row["height"]!);                     
         }
         private async Task GetImage()
