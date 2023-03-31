@@ -10,7 +10,7 @@ namespace grp
     internal class User
     {
         public (string name, int discriminator) Id { get; private set; }
-        public string DiscordId => $"{Id.name}#{Id.discriminator}";
+        public string DiscordId => $"{Id.name}#{Id.discriminator.ToString().PadLeft(4, '0')}";
         public string Name { get; private set; }
         public Image? Image { get; private set; }
         public Height Height { get; private set; }
@@ -44,6 +44,6 @@ namespace grp
             return result;
         }
         public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
-        public override string ToString() => $"[User {DiscordId} {Name} {Height}]";
+        public override string ToString() => $"[User {DiscordId,-13} {Name,-8} {Height,-10}]";
     }
 }

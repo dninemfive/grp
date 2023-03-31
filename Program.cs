@@ -18,6 +18,7 @@ foreach (TsvRow row in document.Rows)
 {
     Users.Add(await User.Parse(row));
 }
-foreach (User user in Users) Console.WriteLine($"{user} : {user.Image?.Height.PrintNullable()}");
+Users = Users.OrderBy(x => x.Height.InCentimeters).ToList();
+foreach (User user in Users) Console.WriteLine($"{user}");
 using Image result = Users.Select(x => x.Image!).Merge();
 result.SaveTo("result.png");

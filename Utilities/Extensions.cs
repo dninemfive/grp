@@ -62,7 +62,6 @@ namespace grp
         }
         public static IEnumerable<Image> LoadImages(this IEnumerable<string> paths) => Utils.LoadImages(paths.ToArray());
         public static Image Merge(this IEnumerable<Image> images) => Utils.Merge(images.ToArray());
-        public static string FileName(this TsvRow row) => $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}";
         public static string WithoutQuotes(this string s) => s.Replace(""+'"',"");
         public static Image Mask(this Image image, IEnumerable<(int x, int y)> points)
         {

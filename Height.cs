@@ -32,7 +32,7 @@ namespace grp
                 int inches = int.Parse(split[1]);
                 return new(feet, inches);
             }),
-            new(Centimeters, s => new(float.Parse(s[..-2])))
+            new(Centimeters, s => new(float.Parse(s.Replace("cm",""))))
         };
         /// <summary>
         /// A wrapper for the logic of parsing things.
@@ -107,7 +107,7 @@ namespace grp
         {
             InCentimeters = centimeters;
         }
-        public override string ToString() => $"[Height {InCentimeters}cm]";
+        public override string ToString() => $"`{InCentimeters}cm`";
         /// <summary>
         /// Tries to parse a <see langword="string"/> into a <see cref="Height"/> via several methods, listed in <see cref="Parsers"/>.
         /// </summary>
