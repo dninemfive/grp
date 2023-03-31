@@ -10,24 +10,31 @@ namespace grp
     internal class User
     {
         public (string name, int discriminator) Id { get; private set; }
-        public string UniqueName => $"{Id.name}#{Id.discriminator}";
+        public string DiscordId => $"{Id.name}#{Id.discriminator}";
         public string Name { get; private set; }
-        public Image Image { get; private set; }
+        public Image? Image { get; private set; }
         public Height Height { get; private set; }
+        public string Url { get; private set; }
         public User(TsvRow row)
         {
             string[] split = row["discord id"]!.Split("#");
             Id = (split[0], int.Parse(split[1]));
             Name = row["display name"]! ?? Id.name;
-            Image = await Utils.DownloadImage(row["url"]!, row.FileName());
+            Url = row["url"]!;            
+            Height = Height.Parse(row["height"]!);                     
+        }
+        public async Task GetImage()
+        {
+            Image = await Utils.DownloadImage(Url, FileName);
+            if (Image is null) return;
             Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Subtract, 1));
-            Height = Height.Parse(row["height"]!);
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.BoxPad,
                 Position = AnchorPositionMode.Bottom,
                 Size = (Size)(Image.Size * Height.Ratio)
-            }));            
+            }));
         }
+        public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
     }
 }
