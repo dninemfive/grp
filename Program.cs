@@ -16,5 +16,14 @@ foreach (TsvRow row in document.Rows)
 {
     // await Utils.Download(row["url"]!, $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}");
 }
-using Image img = Utils.LoadImage("dninemfive#6790.png");
-img.MutateAndSaveTo((image) => image.Flip(FlipMode.Horizontal), "dninemfive#6790.png");
+using Image img = Utils.LoadImage("test.png"), img2 = Utils.LoadImage("test.png");
+using Image result = new Image<Rgba32>(img.Width + img2.Width, img.Height);
+img.Mutate((context) => context.Flip(FlipMode.Horizontal));
+result.Mutate((context) => context.DrawImage(img, 1));
+result.Mutate((context) => context.DrawImage(img2, new Point(img.Width, 0), 1));
+result.SaveTo("test2.png");
+/* img.Mutate((context) => context.Resize(new ResizeOptions()
+{
+    Position = AnchorPositionMode.Left,
+    Size = new(img.Width * 2, img.Height)
+})); */
