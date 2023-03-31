@@ -27,10 +27,10 @@ namespace grp
         {
             Image = await Utils.DownloadImage(Url, FileName);
             if (Image is null) return;
-            Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Subtract, 1));
+            Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Multiply, PixelAlphaCompositionMode.Xor, 1));
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
-                Mode = ResizeMode.BoxPad,
+                Mode = ResizeMode.Stretch,
                 Position = AnchorPositionMode.Bottom,
                 Size = (Size)(Image.Size * Height.Ratio)
             }));
@@ -42,5 +42,6 @@ namespace grp
             return result;
         }
         public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
+        public override string ToString() => $"[User {DiscordId} {Name} {Height}]";
     }
 }
