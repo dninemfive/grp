@@ -21,3 +21,5 @@ foreach (TsvRow row in document.Rows)
 foreach (User user in Users) Console.WriteLine($"{user} : {user.Image?.Height.PrintNullable()}");
 using Image result = Users.Select(x => x.Image!).Merge();
 result.SaveTo("result.png");
+using Image test = Utils.LoadImage("bless#6500.png").Autocrop();
+test.SaveTo("test.png");

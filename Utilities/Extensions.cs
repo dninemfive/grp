@@ -70,5 +70,51 @@ namespace grp
             foreach ((int x, int y) in points) rgbImage[x, y] = Color.Transparent;
             return rgbImage;
         }
+        public static Image Autocrop(this Image image)
+        {
+            Image<Rgba32> rgbImg = image.CloneAs<Rgba32>();
+            List<(int min, int max)> rowBounds = new();            
+            int minY = 0, maxY = 0;
+            rgbImg.ProcessPixelRows(accessor =>
+            {
+                bool encounteredNonEmptyRow = false;
+                bool[] rowEmptiness = new bool[accessor.Height];
+                for (int y = 0; y < accessor.Height; y++)
+                {
+                    bool encounteredNonEmptyPixel = false;
+                    int minX = 0, maxX = 0;
+                    Span<Rgba32> pixelRow = accessor.GetRowSpan(y);
+                    for(int x = 0; x < pixelRow.Length; x++)
+                    {
+                        Rgba32 pixel = pixelRow[x];
+                        if(pixel.IsEmpty())
+                        {
+                            if (!encounteredNonEmptyPixel) minX = x;
+                            else if (!pixelRow[x - 1].IsEmpty()) maxX = x;
+                        } 
+                        else
+                        {
+                            encounteredNonEmptyPixel = true;
+                        }
+                    }
+                    rowBounds.Add((minX, maxX));
+                    rowEmptiness[y] = !encounteredNonEmptyPixel;
+                    if (!encounteredNonEmptyPixel)
+                    {
+                        if (!encounteredNonEmptyRow) minY = y;
+                        else if (!rowEmptiness[y - 1]) maxY = y;
+                    } else
+                    {
+                        encounteredNonEmptyRow = true;
+                    }
+                }
+            });
+            int minX = rowBounds.Select(x => x.min).Min();
+            int maxX = rowBounds.Select(x => x.max).Max();
+            Rectangle rect = new(minX, minY, maxX - minX, maxY - minY);
+            rgbImg.Mutate((context) => context.Crop(rect));
+            return rgbImg;
+        }
+        public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;
     }
 }
