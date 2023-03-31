@@ -93,7 +93,7 @@ namespace grp
             foreach(Image img in images)
             {
                 result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, 0), 1));
-                currentLeftSide += img.Width;
+                currentLeftSide += (int)(img.Width * 1f);
             }
             return result;
         }

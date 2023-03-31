@@ -21,17 +21,3 @@ foreach (TsvRow row in document.Rows)
 foreach (User user in Users) Console.WriteLine($"{user} : {user.Image?.Height.PrintNullable()}");
 using Image result = Users.Select(x => x.Image!).Merge();
 result.SaveTo("result.png");
-using Image<Rgba32> watermarkMask = Constants.WatermarkForSubtraction.CloneAs<Rgba32>();
-HashSet<(int x, int y)> points = new();
-Rgba32 transparent = Color.Transparent;
-watermarkMask.ProcessPixelRows(accessor =>
-{
-    for(int y = 0; y < accessor.Height; y++)
-    {
-        Span<Rgba32> pixelRow = accessor.GetRowSpan(y);
-        for(int x = 0; x < pixelRow.Length; x++)
-        {
-            points.Add((x, y));
-        }
-    }
-});

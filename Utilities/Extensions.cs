@@ -64,5 +64,11 @@ namespace grp
         public static Image Merge(this IEnumerable<Image> images) => Utils.Merge(images.ToArray());
         public static string FileName(this TsvRow row) => $"{row["discord id"]!}{Path.GetExtension(row["url"]!)}";
         public static string WithoutQuotes(this string s) => s.Replace(""+'"',"");
+        public static Image Mask(this Image image, IEnumerable<(int x, int y)> points)
+        {
+            Image<Rgba32> rgbImage = image.CloneAs<Rgba32>();
+            foreach ((int x, int y) in points) rgbImage[x, y] = Color.Transparent;
+            return rgbImage;
+        }
     }
 }
