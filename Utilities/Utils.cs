@@ -84,16 +84,17 @@ namespace grp
         {
             foreach (string path in paths) yield return LoadImage(path);
         }
-        public static Image Merge(params Image[] images)
+        public static Image Merge(IEnumerable<Image> images, float overlap = 0.1f)
         {
+            float f = 1f - overlap;
             int width = images.Select(x => x.Width).Sum();
             int height = images.Select(x => x.Height).Max();
             Image result = new Image<Rgba32>(width, height);
             int currentLeftSide = 0;
             foreach(Image img in images)
             {
-                result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, 0), 1));
-                currentLeftSide += (int)(img.Width * 1f);
+                result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
+                currentLeftSide += (int)(img.Width * f);
             }
             return result;
         }

@@ -29,6 +29,7 @@ namespace grp
             if (Image is null) return;
             Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Multiply, PixelAlphaCompositionMode.Xor, 1));
             Image = Image.Mask(Constants.WatermarkMask);
+            Image = Image.Autocrop();
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.Stretch,
