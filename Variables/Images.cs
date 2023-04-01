@@ -13,6 +13,10 @@ namespace grp
     public static class Images
     {
         /// <summary>
+        /// The watermark to add so that the picrew author and the group for whom the image is made are both credited.
+        /// </summary>
+        public static readonly Image WatermarkToAdd = Paths.WatermarkForAddition.LoadImage();
+        /// <summary>
         /// The image which will be used to mask out the watermarks.
         /// </summary>
         public static readonly Image<Rgba32> WatermarkForSubtraction = Paths.WatermarkForSubtraction.LoadImage().CloneAs<Rgba32>();

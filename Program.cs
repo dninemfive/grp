@@ -7,7 +7,7 @@ using System.Xml.Schema;
 const int maxUsersPerRow = 12;
 #region prepare database
 Directory.CreateDirectory(Paths.ImageFolder);
-List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(1).Where(x => !string.IsNullOrEmpty(x)).ToList();
+List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
     ("discord id", 42),
@@ -42,6 +42,10 @@ foreach(IEnumerable<User> row in rows)
     rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
     Console.WriteLine(orderedRow.Select(x => x.Name).Aggregate((x, y) => $"{x}, {y}"));
 }
-using Image result = rowImages.Merge(MergeDirection.TopBottom, 0.42f);
+using Image result = ImageUtils.Merge(new Image[]
+{
+    Images.WatermarkToAdd,
+    rowImages.Merge(MergeDirection.TopBottom, 0.42f)
+}, MergeDirection.BottomTop, 0f);
 result.SaveTo("result.png");
 #endregion construct image
