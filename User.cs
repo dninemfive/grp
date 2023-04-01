@@ -29,7 +29,6 @@ namespace grp
         {
             Image = await NetUtils.DownloadImage(Url, FileName);
             if (Image is null) return;
-            Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Multiply, PixelAlphaCompositionMode.Xor, 1));
             Image = Image.Mask(Constants.WatermarkMask);
             Image = Image.Autocrop(AutocropType.Vertical);
             Image.Mutate((context) => context.Resize(new ResizeOptions()

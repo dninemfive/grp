@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace grp
 {
     public static class Constants
-    {                
-        public static readonly Image WatermarkForSubtraction = Paths.WatermarkForSubtraction.LoadImage();
+    {
+        public static readonly Image<Rgba32> WatermarkForSubtraction = Paths.WatermarkForSubtraction.LoadImage().CloneAs<Rgba32>();
         private static HashSet<(int x, int y)>? _watermarkMask = null;
         public static ImmutableHashSet<(int x, int y)> WatermarkMask
         {
             get
             {
-                if(_watermarkMask is null)
+                if (_watermarkMask is null)
                 {
                     _watermarkMask = new();
                     using Image<Rgba32> watermarkMask = WatermarkForSubtraction.CloneAs<Rgba32>();
