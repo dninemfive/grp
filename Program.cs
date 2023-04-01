@@ -4,7 +4,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Xml.Schema;
 
-const int maxUsersPerRow = 4;
+const int maxUsersPerRow = 12;
 
 Directory.CreateDirectory(Paths.ImageFolder);
 List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(3).ToList();
@@ -31,7 +31,7 @@ latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
 //foreach (User user in latestUniqueUsers) Console.WriteLine($"{user}");
 foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.DiscordId}.png");
 int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count() / (float)maxUsersPerRow);
-IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderBy(x => x.Height).BreakInto(rowCt);
+IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderByDescending(x => x.Height).BreakInto(rowCt);
 List<Image> rowImages = new();
 foreach(IEnumerable<User> row in rows)
 {
@@ -39,5 +39,5 @@ foreach(IEnumerable<User> row in rows)
     rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
     Console.WriteLine(orderedRow.Select(x => x.Name).Aggregate((x, y) => $"{x}, {y}"));
 }
-using Image result = rowImages.Merge(MergeDirection.TopBottom, 0.69f);
+using Image result = rowImages.Merge(MergeDirection.TopBottom, 0.42f);
 result.SaveTo("result.png");

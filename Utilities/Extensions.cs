@@ -127,21 +127,19 @@ namespace grp
         public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;
         public static IEnumerable<IEnumerable<T>> BreakInto<T>(this IEnumerable<T> original, int parts)
         {
+            Console.WriteLine($"{original.GetType().Name}[{original.Count()}].BreakInto({parts})");
             int partSize = original.Count() / parts;
             int remainder = original.Count() - (parts * partSize);
             int ct = 0;
-            while(ct < original.Count())
+            Console.WriteLine($"partSize = {partSize} remainder = {remainder}");
+            for(int i = 0; i < parts; i++)
             {
-                List<T> result = new();
-                int index = ct;
-                for(; index < ct + partSize; index++)
-                {
-                    result.Add(original.ElementAt(index));
-                }
-                if (remainder-- > 0) result.Add(original.ElementAt(++index));
-                yield return result;
-                ct = index;
-            }
+                int thisSize = partSize + (remainder-- > 0 ? 1 : 0);                
+                int endSize = original.Count() - thisSize - ct;
+                Console.WriteLine($"\t{i,2}: ct = {ct} thisSize = {thisSize} remainder = {remainder} endSize = {endSize}");
+                yield return original.Skip(ct).SkipLast(endSize);
+                ct += thisSize;
+            }           
         }
     }
 }
