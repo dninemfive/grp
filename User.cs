@@ -9,6 +9,7 @@ namespace grp
 {
     internal class User
     {
+        public DateTime Timestamp { get; private set; }
         public (string name, int discriminator) Id { get; private set; }
         public string DiscordId => $"{Id.name}#{Id.discriminator.ToString().PadLeft(4, '0')}";
         public string Name { get; private set; }
@@ -17,6 +18,7 @@ namespace grp
         public string Url { get; private set; }
         private User(TsvRow row)
         {
+            DateTime.Parse(row["timestamp"]!);
             string[] split = row["discord id"]!.Split("#");
             Id = (split[0], int.Parse(split[1]));
             Name = row["display name"]! ?? Id.name;
@@ -35,6 +37,12 @@ namespace grp
                 Mode = ResizeMode.Stretch,
                 Position = AnchorPositionMode.Bottom,
                 Size = (Size)(Image.Size * Height.Ratio)
+            }));
+            Image.Mutate((context) => context.Resize(new ResizeOptions()
+            {
+                Mode = ResizeMode.BoxPad,
+                Position = AnchorPositionMode.Bottom,
+                Size = new(Image.Height, Image.Height)
             }));
         }
         public static async Task<User> Parse(TsvRow row)

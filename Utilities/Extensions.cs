@@ -61,7 +61,7 @@ namespace grp
             img.SaveTo(path);
         }
         public static IEnumerable<Image> LoadImages(this IEnumerable<string> paths) => Utils.LoadImages(paths.ToArray());
-        public static Image Merge(this IEnumerable<Image> images) => Utils.Merge(images.ToArray());
+        public static Image Merge(this IEnumerable<Image> images, float overlap = 0.25f) => Utils.Merge(images, overlap);
         public static string WithoutQuotes(this string s) => s.Replace(""+'"',"");
         public static Image Mask(this Image image, IEnumerable<(int x, int y)> points)
         {

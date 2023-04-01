@@ -76,7 +76,8 @@ namespace grp
         }
         public static Image LoadImage(string path)
         {
-            if (!Path.IsPathFullyQualified(path)) path = path.InImageFolder(); 
+            if (!Path.IsPathFullyQualified(path)) path = path.InImageFolder();
+            Console.WriteLine($"Attempting to load image at {path}...");
             using FileStream fs = File.OpenRead(path);
             return Image.Load(fs);
         }
@@ -84,9 +85,8 @@ namespace grp
         {
             foreach (string path in paths) yield return LoadImage(path);
         }
-        public static Image Merge(IEnumerable<Image> images, float overlap = 0.1f)
+        public static Image Merge(IEnumerable<Image> images, float overlap = 0.25f)
         {
-            float f = 1f - overlap;
             int width = images.Select(x => x.Width).Sum();
             int height = images.Select(x => x.Height).Max();
             Image result = new Image<Rgba32>(width, height);
@@ -94,7 +94,7 @@ namespace grp
             foreach(Image img in images)
             {
                 result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                currentLeftSide += (int)(img.Width * f);
+                currentLeftSide += (int)(img.Width * (1 - overlap));
             }
             return result;
         }
