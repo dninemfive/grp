@@ -26,5 +26,5 @@ foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
 latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Height.InCentimeters).ToList();
 foreach (User user in latestUniqueUsers) Console.WriteLine($"{user}");
 foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.DiscordId}.png");
-using Image result = latestUniqueUsers.Select(x => x.Image!).Merge(0.5f);
+using Image result = latestUniqueUsers.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.5f);
 result.SaveTo("result.png");

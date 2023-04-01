@@ -85,18 +85,19 @@ namespace grp
         {
             foreach (string path in paths) yield return LoadImage(path);
         }
-        public static Image Merge(IEnumerable<Image> images, float overlap = 0.25f)
+        public static Image Merge(IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
+            if (direction is MergeDirection.TopBottom or MergeDirection.BottomTop) throw new NotImplementedException();
             int width = images.Select(x => x.Width).Sum();
             int height = images.Select(x => x.Height).Max();
             Image result = new Image<Rgba32>(width, height);
-            int currentLeftSide = 0;
+            int currentLeftSide = result.Width - images.First().Width;
             foreach(Image img in images)
             {
                 result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                currentLeftSide += (int)(img.Width * (1 - overlap));
+                currentLeftSide += (direction is MergeDirection.LeftRight ? 1 : -1)*(int)(img.Width * (1 - overlap));
             }
-            return result;
+            return result.Autocrop();
         }
     }
 }
