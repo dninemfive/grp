@@ -40,14 +40,17 @@ namespace grp
             int currentTopOrLeftEdge = direction.IsReverse() ? edgeDimension(result) : 0;
             Console.WriteLine($"\tcurrentTopOrLeftEdge {currentTopOrLeftEdge}");
             Console.WriteLine($"\tbeginning loop({images.Count()}){(direction.IsReverse() ? " in reverse" : "")}");
+            bool first = true;
             foreach (Image img in direction.IsReverse() ? images.Reverse() : images)
             {
-                if (direction.IsReverse()) currentTopOrLeftEdge -= (int)(edgeDimension(img) * (1 - overlap));
+                if (direction.IsReverse()) currentTopOrLeftEdge -= (int)(edgeDimension(img) * (first ? 1 : (1 - overlap)));
                 Console.WriteLine($"\t\timg {img.Width}x{img.Height} {edgeDimension(img)}x{alignDimension(img)}");
                 Console.WriteLine($"\t\t{currentTopOrLeftEdge}");
                 result.Mutate((context) => context.DrawImage(img, GetEdgePoint(alignDimension(result), alignDimension(img), currentTopOrLeftEdge, direction), 1));
                 if(!direction.IsReverse()) currentTopOrLeftEdge += (int)(edgeDimension(img) * (1 - overlap));
+                first = false;
             }
+            result.SaveTo($"debug/{images.GetHashCode()}.png");
             return result.Autocrop();
         }
         /// <summary>
