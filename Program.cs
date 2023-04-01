@@ -23,8 +23,8 @@ foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
 {
     latestUniqueUsers.Add(users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).First());
 }
-latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Height.InCentimeters).ToList();
+latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
 foreach (User user in latestUniqueUsers) Console.WriteLine($"{user}");
 foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.DiscordId}.png");
-using Image result = latestUniqueUsers.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.5f);
+using Image result = latestUniqueUsers.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f);
 result.SaveTo("result.png");

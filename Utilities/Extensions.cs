@@ -82,7 +82,7 @@ namespace grp
                 for (int y = 0; y < accessor.Height; y++)
                 {
                     bool encounteredNonEmptyPixel = false;
-                    int minX = 0, maxX = rgbImg.Width;
+                    int minX = 0, maxX = 0;
                     Span<Rgba32> pixelRow = accessor.GetRowSpan(y);
                     for(int x = 0; x < pixelRow.Length; x++)
                     {

@@ -87,16 +87,56 @@ namespace grp
         }
         public static Image Merge(IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
-            if (direction is MergeDirection.TopBottom or MergeDirection.BottomTop) throw new NotImplementedException();
-            int width = images.Select(x => x.Width).Sum();
-            int height = images.Select(x => x.Height).Max();
-            Image result = new Image<Rgba32>(width, height);
-            int currentLeftSide = result.Width - images.First().Width;
-            foreach(Image img in images)
+            Image result;
+            if (direction is MergeDirection.TopBottom or MergeDirection.BottomTop)
             {
-                result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                currentLeftSide += (direction is MergeDirection.LeftRight ? 1 : -1)*(int)(img.Width * (1 - overlap));
+                int width = images.Select(x => x.Width).Max();
+                int height = images.Select(x => x.Height).Sum();
+                result = new Image<Rgba32>(width, height);
+                if(direction is MergeDirection.TopBottom)
+                {
+                    int currentTopSide = 0;
+                    foreach(Image img in images)
+                    {
+                        result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
+                        currentTopSide += (int)(img.Height * 1 - overlap);
+                    }
+                } 
+                else
+                {
+                    int currentTopSide = result.Height - images.Last().Height;
+                    foreach (Image img in images)
+                    {
+                        result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
+                        currentTopSide -= (int)(img.Height * 1 - overlap);
+                    }
+                }
             }
+            else if (direction is MergeDirection.LeftRight or MergeDirection.RightLeft)
+            {
+                int width = images.Select(x => x.Width).Sum();
+                int height = images.Select(x => x.Height).Max();
+                result = new Image<Rgba32>(width, height);
+                if(direction is MergeDirection.LeftRight)
+                {
+                    int currentLeftSide = 0;
+                    foreach(Image img in images)
+                    {
+                        result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
+                        currentLeftSide += (int)(img.Width * 1 - overlap);
+                    }
+                } 
+                else
+                {
+                    int currentLeftSide = result.Width - images.Last().Width;
+                    foreach (Image img in images.Reverse())
+                    {
+                        result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
+                        currentLeftSide -= (int)(img.Width * (1 - overlap));
+                    }
+                }                
+            }
+            else throw new ArgumentOutOfRangeException(nameof(direction));
             return result.Autocrop();
         }
     }
