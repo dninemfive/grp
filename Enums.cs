@@ -28,4 +28,6 @@ namespace grp
         /// </summary>
         Nullable
     }
+    public enum AutocropType { Horizontal, Vertical, Both }
+    public enum MergeDirection { LeftRight, RightLeft, TopBottom, BottomTop }
 }
