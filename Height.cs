@@ -10,7 +10,7 @@ namespace grp
     /// <summary>
     /// Parses a string of in the format <c><em>x</em>'<em>y</em>"</c> or <c><em>z</em>cm</c> into a height in centimeters.
     /// </summary>
-    public class Height
+    public class Height : IComparable
     {
         /// <summary>
         /// Matches <c><em>x</em>'<em>y</em>"</c>, where <c><em>x</em></c> and <c><em>y</em></c> are numbers.
@@ -133,6 +133,15 @@ namespace grp
         /// </summary>
         /// <returns>A pseudo-unique hash code for this object's value, suitable for use in hash tables and the like.</returns>
         public override int GetHashCode() => InCentimeters.GetHashCode();
+        // https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0
+        public int CompareTo(object? obj)
+        {
+            if (obj is null) return 1;
+            if (obj is Height h) return InCentimeters.CompareTo(h.InCentimeters);
+            if (obj is decimal d) return InCentimeters.CompareTo(d);
+            throw new ArgumentException($"Cannot compare height {this} to {obj.GetType().Name} {obj}!");
+        }
+
         /// <summary>
         /// Implements the equality operator between two <see cref="Height"/> instances. Implemented using <see cref="Equals(object?)"/>, which states that
         /// "<inheritdoc cref="Equals(object?)" path="/remarks"/>"

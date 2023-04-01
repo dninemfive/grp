@@ -134,7 +134,7 @@ namespace grp
             {
                 List<T> result = new();
                 int index = ct;
-                for(; index <= ct + partSize; index++)
+                for(; index < ct + partSize; index++)
                 {
                     result.Add(original.ElementAt(index));
                 }

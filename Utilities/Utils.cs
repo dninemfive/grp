@@ -87,6 +87,7 @@ namespace grp
         }
         public static Image Merge(IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
+            Console.WriteLine($"Merge({images.GetType().Name}[{images.Count()}], {direction}, {overlap})");
             Image result;
             if (direction is MergeDirection.TopBottom or MergeDirection.BottomTop)
             {
@@ -99,7 +100,7 @@ namespace grp
                     foreach(Image img in images)
                     {
                         result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
-                        currentTopSide += (int)(img.Height * 1 - overlap);
+                        currentTopSide += (int)(img.Height * (1 - overlap));
                     }
                 } 
                 else
@@ -108,7 +109,7 @@ namespace grp
                     foreach (Image img in images)
                     {
                         result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
-                        currentTopSide -= (int)(img.Height * 1 - overlap);
+                        currentTopSide -= (int)(img.Height * (1 - overlap));
                     }
                 }
             }
@@ -123,7 +124,7 @@ namespace grp
                     foreach(Image img in images)
                     {
                         result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                        currentLeftSide += (int)(img.Width * 1 - overlap);
+                        currentLeftSide += (int)(img.Width * (1 - overlap));
                     }
                 } 
                 else
