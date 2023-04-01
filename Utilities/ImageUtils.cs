@@ -126,11 +126,9 @@ namespace grp
             image.SaveTo(StringUtils.DebugName(nameof(Autocrop), image.GetHashCode()));
             Image<Rgba32> rgbImg = image.CloneAs<Rgba32>();
             List<(int min, int max)> rowBounds = new();
-            int minY = 0, maxY = rgbImg.Height;
+            List<bool> rowEmptiness = new();
             rgbImg.ProcessPixelRows(accessor =>
             {
-                bool encounteredNonEmptyRow = false;
-                bool[] rowEmptiness = new bool[accessor.Height];
                 for (int y = 0; y < accessor.Height; y++)
                 {
                     bool encounteredNonEmptyPixel = false;
@@ -150,17 +148,7 @@ namespace grp
                         }
                     }
                     rowBounds.Add((minX, maxX));
-                    if (type is AutocropType.Horizontal) continue;
-                    rowEmptiness[y] = !encounteredNonEmptyPixel;
-                    if (!encounteredNonEmptyPixel)
-                    {
-                        if (!encounteredNonEmptyRow) minY = y;
-                        else if (!rowEmptiness[y - 1]) maxY = y;
-                    }
-                    else
-                    {
-                        encounteredNonEmptyRow = true;
-                    }
+                    rowEmptiness.Add(!encounteredNonEmptyPixel);
                 }
             });
             int minX = type switch
@@ -173,6 +161,12 @@ namespace grp
                 AutocropType.Vertical => rgbImg.Width,
                 _ => rowBounds.Select(x => x.max).Max()
             };
+            int minY = 0, maxY = rgbImg.Height;
+            if (type is not AutocropType.Horizontal)
+            {
+                foreach (bool b in rowEmptiness.TakeWhile(x => x == true)) minY++;
+                foreach (bool b in (rowEmptiness as IEnumerable<bool>).Reverse().TakeWhile(x => x == true)) maxY--;
+            }
             Console.WriteLine($"minX {minX} maxX {maxX} minY {minY} maxY {maxY}");
             Rectangle rect = new(minX, minY, maxX - minX, maxY - minY);
             rgbImg.Mutate((context) => context.Crop(rect));
