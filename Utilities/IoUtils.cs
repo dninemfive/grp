@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace grp
 {
     /// <summary>
-    /// Utilities relating to saving and loading images.
+    /// Utilities relating to saving and loading files.
     /// </summary>
     public static class IoUtils
     {

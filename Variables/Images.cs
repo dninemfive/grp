@@ -7,10 +7,20 @@ using System.Threading.Tasks;
 
 namespace grp
 {
-    public static class Constants
+    /// <summary>
+    /// Useful data for the watermark removal process, for now.
+    /// </summary>
+    public static class Images
     {
+        /// <summary>
+        /// The image which will be used to mask out the watermarks.
+        /// </summary>
         public static readonly Image<Rgba32> WatermarkForSubtraction = Paths.WatermarkForSubtraction.LoadImage().CloneAs<Rgba32>();
+        /// <summary>
+        /// The actual pixel coordinates which will be masked out to remove the watermark.
+        /// </summary>
         private static HashSet<(int x, int y)>? _watermarkMask = null;
+        /// <inheritdoc cref="_watermarkMask"/>
         public static ImmutableHashSet<(int x, int y)> WatermarkMask
         {
             get
@@ -35,13 +45,5 @@ namespace grp
                 return _watermarkMask.ToImmutableHashSet();
             }
         }
-    }
-    public static class Paths
-    {
-        public static readonly string BaseFolder = "C:/Users/dninemfive/Documents/workspaces/misc/grp";
-        public static readonly string ImageFolder = Path.Join(BaseFolder, "images");
-        public static readonly string DataFile = Path.Join(BaseFolder, "grp responses.tsv");
-        public static readonly string WatermarkForSubtraction = Path.Join(BaseFolder, "watermark.png");
-        public static readonly string WatermarkForAddition = Path.Join(BaseFolder, "watermark_autocropped.png");
-    }
+    }    
 }

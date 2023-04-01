@@ -8,9 +8,14 @@ namespace grp
 {
     public static class NetUtils
     {
+        /// <summary>
+        /// The <see href="https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0">HttpClient</see> used by this application.
+        /// </summary>
+        /// <remarks>According to the <see href="https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0#instancing">documentation</see>,
+        /// only one <see cref="HttpClient"/> is meant to be used per application.</remarks>
         public static readonly HttpClient Client = new();
         /// <summary>
-        /// Attempts to download a file to the <see cref="Constants.ImageFolderPath">default image folder</see> and prints whether or not it was successful, 
+        /// Attempts to download a file to the <see cref="Images.ImageFolderPath">default image folder</see> and prints whether or not it was successful, 
         /// as well as the response code.
         /// </summary>
         /// <param name="url">The URL of the file to download.</param>
@@ -48,7 +53,7 @@ namespace grp
             return null;
         }
         /// <summary>
-        /// Attempts to download a file to the <see cref="Constants.ImageFolderPath">default image folder</see> and prints whether or not it was successful, 
+        /// Attempts to download a file to the <see cref="Images.ImageFolderPath">default image folder</see> and prints whether or not it was successful, 
         /// as well as the response code.
         /// </summary>
         /// <param name="url">The URL of the file to download.</param>

@@ -49,7 +49,7 @@ namespace grp
             /// </summary>
             public Func<string, Height> Parse;
             /// <summary>
-            /// 
+            /// Constructs a <see cref="Parser"/>.
             /// </summary>
             /// <param name="regex"><inheritdoc cref="Regex" path="/summary"/></param>
             /// <param name="parser"><inheritdoc cref="Parse" path="/summary"/></param>
@@ -85,7 +85,7 @@ namespace grp
         /// </summary>
         /// <remarks>Calculated by averaging the amab and afab heights given
         /// <see href="https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world">here</see>.</remarks>
-        public static readonly Height Default = new(Utils.Mean(171, 159));
+        public static readonly Height Default = new(MiscUtils.Mean(171, 159));
         /// <summary>
         /// The canonical height parsed, given in centimeters.
         /// </summary>
@@ -133,7 +133,14 @@ namespace grp
         /// </summary>
         /// <returns>A pseudo-unique hash code for this object's value, suitable for use in hash tables and the like.</returns>
         public override int GetHashCode() => InCentimeters.GetHashCode();
-        // https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0
+        /// <summary>
+        /// Implements <see href="https://learn.microsoft.com/en-us/dotnet/api/system.icomparable?view=net-8.0">IComparable</see>.
+        /// </summary>
+        /// <param name="obj">The object to compare.</param>
+        /// <returns>A negative value if this should come before the object, a positive value if it should come after (or the other is <see langword="null"/>),
+        /// or zero if they are equal, corresponding precisely to a <see langword="float"/> being compared to <c>obj</c>.</returns>
+        /// <exception cref="ArgumentException">Thrown if <c>obj</c> is non-<see langword="null"/> but is neither a <see cref="Height"/>
+        /// nor a <see langword="decimal"/>.</exception>
         public int CompareTo(object? obj)
         {
             if (obj is null) return 1;
@@ -141,7 +148,6 @@ namespace grp
             if (obj is decimal d) return InCentimeters.CompareTo(d);
             throw new ArgumentException($"Cannot compare height {this} to {obj.GetType().Name} {obj}!");
         }
-
         /// <summary>
         /// Implements the equality operator between two <see cref="Height"/> instances. Implemented using <see cref="Equals(object?)"/>, which states that
         /// "<inheritdoc cref="Equals(object?)" path="/remarks"/>"

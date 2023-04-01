@@ -13,9 +13,9 @@ namespace grp
     {
         /// <summary></summary>
         /// <typeparam name="T">The type of the objects to print.</typeparam>
-        /// <param name="values">An array holding the objects to print paired with the width of their respective columns.</param>
+        /// <param name="values">An enumerable holding the objects to print paired with the width of their respective columns.</param>
         /// <returns>A string corresponding to the objects <c>t</c> in order, with columns padded to <c>width</c>.</returns>
-        public static string InColumns<T>(params (T t, int width)[] values)
+        public static string InColumns<T>(this IEnumerable<(T t, int width)> values)
         {
             string result = "";
             foreach ((T t, int width) in values)
@@ -24,11 +24,6 @@ namespace grp
             }
             return result;
         }
-        /// <typeparam name="T">The type of the objects to print.</typeparam>
-        /// <param name="values">An enumerable holding the objects to print paired with the width of their respective columns.</param>
-        /// <returns>A string corresponding to the values <c>t</c> in order, in columns padded to their respective <c>width</c>.</returns>
-        public static string InColumns<T>(this IEnumerable<(T t, int width)> values)
-            => InColumns(values.ToArray());
         /// <typeparam name="T">The type of the objects to print.</typeparam>
         /// <param name="values">An enumerable holding the objects to print.</param>
         /// <param name="widths">An enumerable holding the widths of the columns, which will be applied in the same order as the objects.</param>
@@ -64,6 +59,6 @@ namespace grp
         /// <summary></summary>
         /// <param name="s">The string whose quotes to remove.</param>
         /// <returns>A copy of <c>s</c> without any instances of the character <c>"</c>.</returns>
-        public static string WithoutQuotes(this string s) => s.Replace("" + '"', "");
+        public static string WithoutQuotes(this string s) => s.Replace('"'.ToString(), "");
     }
 }
