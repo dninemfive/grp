@@ -60,5 +60,12 @@ namespace grp
         /// <param name="s">The string whose quotes to remove.</param>
         /// <returns>A copy of <c>s</c> without any instances of the character <c>"</c>.</returns>
         public static string WithoutQuotes(this string s) => s.Replace('"'.ToString(), "");
+        /// <summary>
+        /// Gets a standard debug name for a given file created by a given method name.
+        /// </summary>
+        /// <param name="methodName">The name of the method creating this debug file.</param>
+        /// <param name="hash">A hash vaguely related to the file being created.</param>
+        /// <returns>A string which can be used as a filename for the file being created.</returns>
+        public static string DebugName(string methodName, int hash) => $"debug/{methodName}_{DateTime.Now:yyMMdd'-'HH' 'mm' 'ss}_{hash}.png";
     }
 }

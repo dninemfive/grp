@@ -26,12 +26,12 @@ namespace grp
         /// <param name="overlap">How much images should overlap. The default value, <c>0.25</c>, indicates that each image will overlay 25% of the image previous.
         /// <br/> A value of <c>0</c> means no overlap, and a value of <c>1</c> means complete overlap. Values below 0 or above 1 are undefined but the former
         /// should work, increasing image spacing.</param>
-        /// <returns>An <see cref="Image"/> consisting of the specified <c>images</c> overlaid as described above, autocropped to clear working space.</returns>
+        /// <returns>An <see cref="Image"/> consisting of the specified <c>images</c> overlaid as described above.</returns>
         public static Image Merge(this IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
             if (images.Count() == 1) return images.First();
             Console.WriteLine($"Merge([{images.Count()}], {direction}, {overlap})");
-            Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction);
+            Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction, overlap);
             // edgeDimension is used for figuring out the left or top edge
             // alignDimension is used for aligning the image
             Func<Image, int> edgeDimension = direction.IsHorizontal() ? (x) => x.Width : (x) => x.Height,
@@ -50,7 +50,7 @@ namespace grp
                 if(!direction.IsReverse()) currentTopOrLeftEdge += (int)(edgeDimension(img) * (1 - overlap));
                 first = false;
             }
-            result.SaveTo($"debug/{images.GetHashCode()}.png");
+            result.SaveTo(StringUtils.DebugName(nameof(Merge), images.GetHashCode()));
             return result.Autocrop();
         }
         /// <summary>
@@ -62,10 +62,12 @@ namespace grp
         /// <returns>An <see cref="Image"/>&lt;<see cref="Rgba32"/>> with dimensions which fit a merged image, as described above.</returns>
         /// <exception cref="ArgumentOutOfRangeException">Thrown only if you pass an <see langword="int"/> outside the valid values of <see cref="MergeDirection"/>
         /// cast to a <see cref="MergeDirection"/>, so don't do that.</exception>
-        public static Image<Rgba32> GenerateImageWhichFits(IEnumerable<int> widths, IEnumerable<int> heights, MergeDirection direction) => direction switch
+        public static Image<Rgba32> GenerateImageWhichFits(IEnumerable<int> widths, IEnumerable<int> heights, MergeDirection direction, float overlap) => direction switch
         {
-            MergeDirection.BottomTop or MergeDirection.TopBottom => new(widths.Max(), heights.Sum()),
-            MergeDirection.LeftRight or MergeDirection.RightLeft => new(widths.Sum(), heights.Max()),
+            MergeDirection.BottomTop or MergeDirection.TopBottom => new(widths.Max(), 
+                heights.Select(x => (int)(x * (1 - overlap))).Sum() + (int)MiscUtils.Mean(heights.First(), heights.Last())),
+            MergeDirection.LeftRight or MergeDirection.RightLeft => new(widths.Select(x => (int)(x * (1 - overlap) 
+            + (int)MiscUtils.Mean(widths.First(), widths.Last()))).Sum(), heights.Max()),
             _ => throw new ArgumentOutOfRangeException(nameof(direction))
         };
         /// <summary>
@@ -121,6 +123,7 @@ namespace grp
         /// <returns>The original <c>image</c>, autocropped as described above.</returns>
         public static Image Autocrop(this Image image, AutocropType type = AutocropType.Both)
         {
+            image.SaveTo(StringUtils.DebugName(nameof(Autocrop), image.GetHashCode()));
             Image<Rgba32> rgbImg = image.CloneAs<Rgba32>();
             List<(int min, int max)> rowBounds = new();
             int minY = 0, maxY = rgbImg.Height;
@@ -170,6 +173,7 @@ namespace grp
                 AutocropType.Vertical => rgbImg.Width,
                 _ => rowBounds.Select(x => x.max).Max()
             };
+            Console.WriteLine($"minX {minX} maxX {maxX} minY {minY} maxY {maxY}");
             Rectangle rect = new(minX, minY, maxX - minX, maxY - minY);
             rgbImg.Mutate((context) => context.Crop(rect));
             return rgbImg;
