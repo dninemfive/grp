@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 namespace grp
 {
     public static class Constants
-    {        
-        public static readonly HttpClient Client = new();
-        public static readonly Image WatermarkForSubtraction = Utils.LoadImage(Paths.WatermarkForSubtraction);
+    {                
+        public static readonly Image WatermarkForSubtraction = Paths.WatermarkForSubtraction.LoadImage();
         private static HashSet<(int x, int y)>? _watermarkMask = null;
         public static ImmutableHashSet<(int x, int y)> WatermarkMask
         {

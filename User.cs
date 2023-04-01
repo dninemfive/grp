@@ -27,7 +27,7 @@ namespace grp
         }
         private async Task GetImage()
         {
-            Image = await Utils.DownloadImage(Url, FileName);
+            Image = await NetUtils.DownloadImage(Url, FileName);
             if (Image is null) return;
             Image.Mutate((context) => context.DrawImage(Constants.WatermarkForSubtraction, PixelColorBlendingMode.Multiply, PixelAlphaCompositionMode.Xor, 1));
             Image = Image.Mask(Constants.WatermarkMask);

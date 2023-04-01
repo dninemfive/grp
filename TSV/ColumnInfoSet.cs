@@ -67,11 +67,13 @@ namespace grp
         public int Count => _order.Count;
         /// <returns>A short summary of this <c>ColumnInfoSet</c>, i.e. its <see cref="Header"/> representation.</returns>
         public override string ToString() => $"ColumnInfoSet {Header.ListNotation()}";
-
+        /// <summary>
+        /// Gets an enumerator over this <see cref="ColumnInfo"/>, or more precisely its <see cref="InOrder">InOrder</see> property.
+        /// </summary>
+        /// <returns>An enumerator listing the <see cref="ColumnInfo"/>s in this set in their canonical order.</returns>
         public IEnumerator<ColumnInfo> GetEnumerator() => InOrder.GetEnumerator();
-
+        /// <inheritdoc cref="GetEnumerator"/>
         IEnumerator IEnumerable.GetEnumerator() => InOrder.GetEnumerator();
-
         /// <summary>
         /// The columns of this set as shown when displaying a table using it, and their widths to use in that scenario.
         /// The <see cref="ColumnType.Key">Key</see> column has `🔑` prepended, 
