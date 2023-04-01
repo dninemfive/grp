@@ -125,5 +125,23 @@ namespace grp
             return rgbImg;
         }
         public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;
+        public static IEnumerable<IEnumerable<T>> BreakInto<T>(this IEnumerable<T> original, int parts)
+        {
+            int partSize = original.Count() / parts;
+            int remainder = original.Count() - (parts * partSize);
+            int ct = 0;
+            while(ct < original.Count())
+            {
+                List<T> result = new();
+                int index = ct;
+                for(; index <= ct + partSize; index++)
+                {
+                    result.Add(original.ElementAt(index));
+                }
+                if (remainder-- > 0) result.Add(original.ElementAt(++index));
+                yield return result;
+                ct = index;
+            }
+        }
     }
 }
