@@ -12,49 +12,13 @@ namespace grp
         {
             Console.WriteLine($"Merge({images.GetType().Name}[{images.Count()}], {direction}, {overlap})");
             Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction);
-            if (direction is MergeDirection.TopBottom or MergeDirection.BottomTop)
+            Func<Image, int> dimensionGetter = direction.IsHorizontal() ? (x) => x.Height : (x) => x.Width;
+            int currentTopOrLeftEdge = direction.IsReverse() ? dimensionGetter(result) - dimensionGetter(images.Last()) : 0;
+            foreach (Image img in direction.IsReverse() ? images.Reverse() : images)
             {
-                if (direction is MergeDirection.TopBottom)
-                {
-                    int currentTopSide = 0;
-                    foreach (Image img in images)
-                    {
-                        result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
-                        currentTopSide += (int)(img.Height * (1 - overlap));
-                    }
-                }
-                else
-                {
-                    int currentTopSide = result.Height - images.Last().Height;
-                    foreach (Image img in images)
-                    {
-                        result.Mutate((context) => context.DrawImage(img, new Point((result.Width - img.Width) / 2, currentTopSide), 1));
-                        currentTopSide -= (int)(img.Height * (1 - overlap));
-                    }
-                }
+                result.Mutate((context) => context.DrawImage(img, GetNextPoint(dimensionGetter(result), dimensionGetter(img), currentTopOrLeftEdge, direction), 1));
+                currentTopOrLeftEdge += (direction.IsReverse() ? -1 : 1) * (int)(dimensionGetter(img) * (1 - overlap));
             }
-            else if (direction is MergeDirection.LeftRight or MergeDirection.RightLeft)
-            {
-                if (direction is MergeDirection.LeftRight)
-                {
-                    int currentLeftSide = 0;
-                    foreach (Image img in images)
-                    {
-                        result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                        currentLeftSide += (int)(img.Width * (1 - overlap));
-                    }
-                }
-                else
-                {
-                    int currentLeftSide = result.Width - images.Last().Width;
-                    foreach (Image img in images.Reverse())
-                    {
-                        result.Mutate((context) => context.DrawImage(img, new Point(currentLeftSide, result.Height - img.Height), 1));
-                        currentLeftSide -= (int)(img.Width * (1 - overlap));
-                    }
-                }
-            }
-            else throw new ArgumentOutOfRangeException(nameof(direction));
             return result.Autocrop();
         }
         public static Image<Rgba32> GenerateImageWhichFits(IEnumerable<int> widths, IEnumerable<int> heights, MergeDirection direction) => direction switch
@@ -65,5 +29,10 @@ namespace grp
         };
         public static bool IsHorizontal(this MergeDirection md) => md is MergeDirection.LeftRight or MergeDirection.RightLeft;
         public static bool IsReverse(this MergeDirection md) => md is MergeDirection.RightLeft or MergeDirection.BottomTop;
+        public static Point GetNextPoint(int resultDim, int imgDim, int currentEdge, MergeDirection md) => md.IsHorizontal() switch
+        {
+            true => new(currentEdge, resultDim - imgDim),
+            false => new((resultDim - imgDim) / 2, currentEdge)
+        };
     }
 }
