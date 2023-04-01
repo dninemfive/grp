@@ -44,7 +44,7 @@ foreach(IEnumerable<User> row in rows)
 }
 using Image result = ImageUtils.Merge(new Image[]
 {
-    Images.WatermarkToAdd,
+    //Images.WatermarkToAdd,
     rowImages.Merge(MergeDirection.TopBottom, 0.42f)
 }, MergeDirection.BottomTop, 0f);
 result.SaveTo("result.png");

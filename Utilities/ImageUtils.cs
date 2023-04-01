@@ -29,22 +29,24 @@ namespace grp
         /// <returns>An <see cref="Image"/> consisting of the specified <c>images</c> overlaid as described above, autocropped to clear working space.</returns>
         public static Image Merge(this IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
+            if (images.Count() == 1) return images.First();
             Console.WriteLine($"Merge([{images.Count()}], {direction}, {overlap})");
             Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction);
-            // dimensionGetter1 is used for figuring out the left or top edge
-            // dimensionGetter2 is used for aligning the image
-            Func<Image, int> dimensionGetter1 = direction.IsHorizontal() ? (x) => x.Width : (x) => x.Height,
-                             dimensionGetter2 = direction.IsHorizontal() ? (x) => x.Height : (x) => x.Width;
-            Console.WriteLine($"\tresult {result.Height}x{result.Width} {dimensionGetter1(result)}x{dimensionGetter2(result)}");
-            int currentTopOrLeftEdge = direction.IsReverse() ? dimensionGetter1(result) - dimensionGetter1(images.Last()) : 0;
+            // edgeDimension is used for figuring out the left or top edge
+            // alignDimension is used for aligning the image
+            Func<Image, int> edgeDimension = direction.IsHorizontal() ? (x) => x.Width : (x) => x.Height,
+                             alignDimension = direction.IsHorizontal() ? (x) => x.Height : (x) => x.Width;
+            Console.WriteLine($"\tresult {result.Height}x{result.Width} {edgeDimension(result)}x{alignDimension(result)}");
+            int currentTopOrLeftEdge = direction.IsReverse() ? edgeDimension(result) : 0;
             Console.WriteLine($"\tcurrentTopOrLeftEdge {currentTopOrLeftEdge}");
             Console.WriteLine($"\tbeginning loop({images.Count()}){(direction.IsReverse() ? " in reverse" : "")}");
             foreach (Image img in direction.IsReverse() ? images.Reverse() : images)
             {
-                Console.WriteLine($"\t\timg {img.Width}x{img.Height} {dimensionGetter1(img)}x{dimensionGetter2(img)}");
+                if (direction.IsReverse()) currentTopOrLeftEdge -= (int)(edgeDimension(img) * (1 - overlap));
+                Console.WriteLine($"\t\timg {img.Width}x{img.Height} {edgeDimension(img)}x{alignDimension(img)}");
                 Console.WriteLine($"\t\t{currentTopOrLeftEdge}");
-                result.Mutate((context) => context.DrawImage(img, GetEdgePoint(dimensionGetter2(result), dimensionGetter2(img), currentTopOrLeftEdge, direction), 1));
-                currentTopOrLeftEdge += (direction.IsReverse() ? -1 : 1) * (int)(dimensionGetter1(img) * (1 - overlap));
+                result.Mutate((context) => context.DrawImage(img, GetEdgePoint(alignDimension(result), alignDimension(img), currentTopOrLeftEdge, direction), 1));
+                if(!direction.IsReverse()) currentTopOrLeftEdge += (int)(edgeDimension(img) * (1 - overlap));
             }
             return result.Autocrop();
         }
