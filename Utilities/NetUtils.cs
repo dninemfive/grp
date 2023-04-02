@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -31,6 +32,10 @@ namespace grp
             {
                 using HttpResponseMessage response = await Client.GetAsync(url);
                 Console.WriteLine($"\t{(response.IsSuccessStatusCode ? "✔️" : "❌")}\t{(int)response.StatusCode} {response.ReasonPhrase}");
+                long? contentLength = response.Content.Headers.ContentLength;
+                if (contentLength > 1e6) throw new Exception($"File at {url} was of size {contentLength}, which is implausibly large!");
+                string? mediaType = response.Content.Headers.ContentType?.MediaType;
+                if (mediaType != "image/png") throw new Exception($"File at {url} was of type {mediaType}, not image/png!");
                 if (response.IsSuccessStatusCode)
                 {
                     try
