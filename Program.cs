@@ -36,12 +36,16 @@ foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.Discor
 int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count() / (float)maxUsersPerRow);
 IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderByDescending(x => x.Height).BreakInto(rowCt);
 List<Image> rowImages = new();
+string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";
 foreach(IEnumerable<User> row in rows)
 {
     List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
     rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
-    Console.WriteLine(orderedRow.Select(x => x.Name).Aggregate((x, y) => $"{x}, {y}"));
+    string rowDescription = orderedRow.Select(x => $"@{x.DiscordId}").Aggregate((x, y) => $"{x}, {y}");
+    Console.WriteLine(rowDescription);
+    imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
 }
+File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
 using Image result = ImageUtils.Merge(new Image[]
 {
     Images.WatermarkToAdd,

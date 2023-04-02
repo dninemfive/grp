@@ -30,22 +30,22 @@ namespace grp
         public static Image Merge(this IEnumerable<Image> images, MergeDirection direction = MergeDirection.LeftRight, float overlap = 0.25f)
         {
             if (images.Count() == 1) return images.First();
-            Console.WriteLine($"Merge([{images.Count()}], {direction}, {overlap})");
+            //Console.WriteLine($"Merge([{images.Count()}], {direction}, {overlap})");
             Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction, overlap);
             // edgeDimension is used for figuring out the left or top edge
             // alignDimension is used for aligning the image
             Func<Image, int> edgeDimension = direction.IsHorizontal() ? (x) => x.Width : (x) => x.Height,
                              alignDimension = direction.IsHorizontal() ? (x) => x.Height : (x) => x.Width;
-            Console.WriteLine($"\tresult {result.Height}x{result.Width} {edgeDimension(result)}x{alignDimension(result)}");
+            //Console.WriteLine($"\tresult {result.Height}x{result.Width} {edgeDimension(result)}x{alignDimension(result)}");
             int currentTopOrLeftEdge = direction.IsReverse() ? edgeDimension(result) : 0;
-            Console.WriteLine($"\tcurrentTopOrLeftEdge {currentTopOrLeftEdge}");
-            Console.WriteLine($"\tbeginning loop({images.Count()}){(direction.IsReverse() ? " in reverse" : "")}");
+            //Console.WriteLine($"\tcurrentTopOrLeftEdge {currentTopOrLeftEdge}");
+            //Console.WriteLine($"\tbeginning loop({images.Count()}){(direction.IsReverse() ? " in reverse" : "")}");
             bool first = true;
             foreach (Image img in direction.IsReverse() ? images.Reverse() : images)
             {
                 if (direction.IsReverse()) currentTopOrLeftEdge -= (int)(edgeDimension(img) * (first ? 1 : (1 - overlap)));
-                Console.WriteLine($"\t\timg {img.Width}x{img.Height} {edgeDimension(img)}x{alignDimension(img)}");
-                Console.WriteLine($"\t\t{currentTopOrLeftEdge}");
+                //Console.WriteLine($"\t\timg {img.Width}x{img.Height} {edgeDimension(img)}x{alignDimension(img)}");
+                //Console.WriteLine($"\t\t{currentTopOrLeftEdge}");
                 result.Mutate((context) => context.DrawImage(img, GetEdgePoint(alignDimension(result), alignDimension(img), currentTopOrLeftEdge, direction), 1));
                 if(!direction.IsReverse()) currentTopOrLeftEdge += (int)(edgeDimension(img) * (1 - overlap));
                 first = false;
@@ -167,7 +167,6 @@ namespace grp
                 foreach (bool b in rowEmptiness.TakeWhile(x => x == true)) minY++;
                 foreach (bool b in (rowEmptiness as IEnumerable<bool>).Reverse().TakeWhile(x => x == true)) maxY--;
             }
-            Console.WriteLine($"minX {minX} maxX {maxX} minY {minY} maxY {maxY}");
             Rectangle rect = new(minX, minY, maxX - minX, maxY - minY);
             rgbImg.Mutate((context) => context.Crop(rect));
             return rgbImg;

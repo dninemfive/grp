@@ -25,11 +25,12 @@ namespace grp
         {
             fileName ??= Path.GetFileName(url);
             string targetPath = Path.Join(Paths.ImageFolder, fileName);
-            Console.Write($"Downloading {url} to {targetPath}... ");
+            //Console.Write($"Downloading {url} to {targetPath}... ");
+            Console.Write($"{fileName,-32}");
             try
             {
                 using HttpResponseMessage response = await Client.GetAsync(url);
-                Console.Write($"\t{(response.IsSuccessStatusCode ? "✔️" : "❌")}\t{(int)response.StatusCode} {response.ReasonPhrase}");
+                Console.WriteLine($"\t{(response.IsSuccessStatusCode ? "✔️" : "❌")}\t{(int)response.StatusCode} {response.ReasonPhrase}");
                 if (response.IsSuccessStatusCode)
                 {
                     try
@@ -37,18 +38,17 @@ namespace grp
                         using Stream stream = await response.Content.ReadAsStreamAsync();
                         using FileStream fs = new(targetPath, FileMode.Create);
                         await stream.CopyToAsync(fs);
-                        Console.WriteLine(" ...Downloaded.");
                         return targetPath;
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine($" ...Download failed: {e.Message}");
+                        Console.WriteLine($"\tDownload failed: {e.Message}");
                     }
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine($" ...Failed to contact `{url}`: {e.Message}");
+                Console.WriteLine($"\t...Failed to contact `{url}`: {e.Message}");
             }
             return null;
         }

@@ -57,7 +57,7 @@ namespace grp
             DateTime.Parse(row["timestamp"]!);
             string[] split = row["discord id"]!.Split("#");
             SplitId = (split[0], int.Parse(split[1]));
-            Name = row["display name"]! ?? SplitId.name;
+            Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
             Url = row["url"]!;
             Height = Height.Parse(row["height"]!);                     
         }
