@@ -38,5 +38,11 @@ namespace grp
         /// <param name="numbers">An array of <see langword="float"/>s to be averaged.</param>
         /// <returns>The <see href="https://en.wikipedia.org/wiki/Arithmetic_mean">arithmetic mean</see> of the given <c>numbers</c>.</returns>
         public static float Mean(params float[] numbers) => numbers.Aggregate((x, y) => x + y) / numbers.Length;
+        public static T Clamp<T>(this T t, T min, T max) where T : IComparable
+        {
+            if (t.CompareTo(min) < 0) return min;
+            if (t.CompareTo(max) > 0) return max;
+            return t;
+        }
     }
 }

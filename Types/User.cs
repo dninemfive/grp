@@ -60,9 +60,7 @@ namespace grp
             SplitId = (split[0], int.Parse(split[1]));
             Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
             Url = row["url"]!;
-            Height = Height.Parse(row["height"]!);
-            if (Height < Height.Minimum) Height = Height.Minimum;
-            if (Height > Height.Maximum) Height = Height.Maximum;
+            Height = Height.Parse(row["height"]!).Clamp(Height.Minimum, Height.Maximum);
         }
         /// <summary>
         /// Downloads the image associated with this user.
