@@ -86,6 +86,8 @@ namespace grp
         /// <remarks>Calculated by averaging the amab and afab heights given
         /// <see href="https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world">here</see>.</remarks>
         public static readonly Height Default = new(MiscUtils.Mean(171, 159));
+        public static readonly Height Minimum = new(2, 0);
+        public static readonly Height Maximum = new(9, 0);
         /// <summary>
         /// The canonical height parsed, given in centimeters.
         /// </summary>
@@ -164,5 +166,7 @@ namespace grp
         /// <param name="b">The second <c>Height</c> to compare.</param>
         /// <returns><see langword="true"/> if the <c>Height</c>s are unequal as described above, or <see langword="false"/> otherwise.</returns>
         public static bool operator !=(Height a, Height b) => !(a == b);
+        public static bool operator >(Height a, Height b) => a.CompareTo(b) > 0;
+        public static bool operator <(Height a, Height b) => a.CompareTo(b) < 0;
     }
 }
