@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace grp
         /// <param name="row">The <see cref="TsvRow"/> containing the data to parse.</param>
         private User(TsvRow row)
         {
-            DateTime.Parse(row["timestamp"]!);
+            DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             string[] split = row["discord id"]!.Split("#");
             SplitId = (split[0], int.Parse(split[1]));
             Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
