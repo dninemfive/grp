@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace grp
 {
@@ -11,6 +13,17 @@ namespace grp
     /// </summary>
     public static class IoUtils
     {
+        /// <summary>
+        /// If a given path is relative rather than absolute, returns an absolute path corresponding to that path relative to the 
+        /// <see cref="Paths.BaseFolder">base folder</see>.
+        /// </summary>
+        /// <param name="path">A relative or absolute path.</param>
+        /// <returns>An absolute path corresponding to the <c>relativePath</c> located within the base folder.</returns>
+        public static string AbsoluteOrInBaseFolder(this string path) => Path.IsPathFullyQualified(path) switch
+        {
+            true => path,
+            false => Path.Join(Paths.BaseFolder, path)
+        };
         /// <summary>
         /// If a given path is relative rather than absolute, returns an absolute path corresponding to that path relative to the 
         /// <see cref="Paths.ImageFolder">default image folder</see>.
@@ -46,5 +59,7 @@ namespace grp
             using FileStream fs = File.Open(path.AbsoluteOrInImageFolder(), FileMode.Create);
             img.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
         }
+        public static string GetJsonProperty(this string path, string key) 
+            => JsonDocument.Parse(File.OpenRead(path.AbsoluteOrInImageFolder())).RootElement.GetProperty(key).ToString();
     }
 }

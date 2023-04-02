@@ -6,4 +6,4 @@ obj/
 images/
 *.tsv
 *.png
-*.key
+*.secret

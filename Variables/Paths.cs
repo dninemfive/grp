@@ -31,5 +31,8 @@ namespace grp
         /// The path to the image which will be appended to credit the picrew author and the group for which the image was generated.
         /// </summary>
         public static readonly string WatermarkForAddition = Path.Join(BaseFolder, "watermark_autocropped.png");
+        public static readonly string GoogleAuth = Path.Join(BaseFolder, "google auth.json.secret");
+        public static readonly string Password = Path.Join(BaseFolder, "password.txt.secret");
+        public static readonly string FileId = Path.Join(BaseFolder, "file id.txt.secret");
     }
 }

@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Google.Apis.Auth;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using System.Text.Json;
+using Google.Apis.Services;
+using Google.Apis.Download;
 
 namespace grp
 {
@@ -71,6 +77,49 @@ namespace grp
             if (resultPath is null) return null;
             return IoUtils.LoadImage(resultPath);
         }
-        
+        /// <summary>
+        /// Gets the Google Auth certificate from the (privately-stored) key and password files.
+        /// </summary>
+        /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
+        private static X509Certificate2 Certificate => new(Paths.GoogleAuth, File.ReadAllText(Paths.Password), X509KeyStorageFlags.DefaultKeySet);
+        /// <summary>
+        /// Constructs a ServiceAccountCredential initializer from the <see cref="Certificate"/>.
+        /// </summary>
+        /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
+        private static ServiceAccountCredential.Initializer CredentialInitializer 
+            => new ServiceAccountCredential.Initializer(Paths.GoogleAuth.GetJsonProperty("client_email")) { Scopes = new[] { DriveService.Scope.Drive} }
+                    .FromCertificate(Certificate);
+        /// <summary>
+        /// Constructs a credential using the <see cref="CredentialInitializer"/>.
+        /// </summary>
+        /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
+        public static ServiceAccountCredential Credential => new(CredentialInitializer);
+        public static DriveService DriveService => new(new BaseClientService.Initializer() 
+        {
+            HttpClientInitializer = Credential,
+            ApplicationName = "misc-grp"
+        });
+        /// <summary>
+        /// Attempts to download the data TSV file from a Drive URL to the <see cref="Paths.BaseFolder">default base folder</see> 
+        /// and prints whether or not it was successful, as well as the response code.
+        /// </summary>
+        /// <param name="url">The URL of the file to download.</param>
+        /// <param name="fileName">The name the file should have when downloaded.</param>
+        /// <returns>The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.</returns>
+        public static string? DownloadTsv(string fileId, string filename)
+        {
+            FilesResource.ExportRequest request = new(DriveService, fileId, "text/tsv");
+            using FileStream fs = new(filename.AbsoluteOrInBaseFolder(), FileMode.Create);
+            IDownloadProgress progress = request.DownloadWithStatus(fs);
+            try
+            {
+                progress.ThrowOnFailure();
+                return filename.AbsoluteOrInBaseFolder();
+            } catch(Exception e)
+            {
+                Console.WriteLine($"Error when downloading file from Drive! Message: {e.Message}");
+                return null;
+            }
+        }
     }
 }
