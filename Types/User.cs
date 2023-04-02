@@ -55,7 +55,7 @@ namespace grp
         /// <param name="row">The <see cref="TsvRow"/> containing the data to parse.</param>
         private User(TsvRow row)
         {
-            Timestamp = DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            Timestamp = DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy H:mm:ss", CultureInfo.InvariantCulture);
             string[] split = row["discord id"]!.Split("#");
             SplitId = (split[0], int.Parse(split[1]));
             Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
@@ -75,14 +75,14 @@ namespace grp
                 File.Delete(Path.Join(Paths.ImageFolder, FileName));
                 throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
             }
-            Image = Image.Mask(Images.WatermarkMask);
-            Image = Image.Autocrop(AutocropType.Vertical);
+            Image = Image.Mask(Images.WatermarkMask);            
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.Stretch,
                 Position = AnchorPositionMode.Bottom,
                 Size = (Size)(Image.Size * Height.Ratio)
             }));
+            Image = Image.Autocrop(AutocropType.Vertical);
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.BoxPad,
