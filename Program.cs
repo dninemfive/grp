@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Xml.Schema;
 
 const int maxUsersPerRow = 12;
+//Console.WriteLine($"{new DateTime(2023, 3, 31, 18, 8, 39):M/d/yyyy HH:mm:ss}");
 #region prepare database
 Directory.CreateDirectory(Paths.ImageFolder);
 List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();

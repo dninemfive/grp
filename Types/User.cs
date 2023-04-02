@@ -55,7 +55,7 @@ namespace grp
         /// <param name="row">The <see cref="TsvRow"/> containing the data to parse.</param>
         private User(TsvRow row)
         {
-            DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            Timestamp = DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             string[] split = row["discord id"]!.Split("#");
             SplitId = (split[0], int.Parse(split[1]));
             Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
