@@ -70,6 +70,12 @@ namespace grp
         {
             Image = await NetUtils.DownloadImage(Url, FileName);
             if (Image is null) return;
+            if (Image.Width != 600 || Image.Height != 600)
+            {
+                File.Delete(Path.Join(Paths.ImageFolder, FileName));
+                // todo: move this to a HEAD request
+                throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
+            }
             Image = Image.Mask(Images.WatermarkMask);
             Image = Image.Autocrop(AutocropType.Vertical);
             Image.Mutate((context) => context.Resize(new ResizeOptions()
