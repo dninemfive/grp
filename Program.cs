@@ -1,8 +1,8 @@
 ﻿using grp;
 using System.Net.Http;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Xml.Schema;
+using System.Windows;
 
 const int maxUsersPerRow = 12;
 #region prepare database
@@ -34,7 +34,7 @@ latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
 // foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.DiscordId}.png");
 #endregion load users
 #region construct image
-int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count() / (float)maxUsersPerRow);
+int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)maxUsersPerRow);
 IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderByDescending(x => x.Height).BreakInto(rowCt);
 List<Image> rowImages = new();
 string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";
@@ -45,6 +45,7 @@ foreach(IEnumerable<User> row in rows)
     string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
     // Console.WriteLine(rowDescription);
     imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
+    TextCopy.ClipboardService.SetText(imageDescription);
 }
 File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
 using Image result = ImageUtils.Merge(new Image[]
