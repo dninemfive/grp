@@ -15,7 +15,7 @@ namespace grp
         /// <summary>
         /// Matches <c><em>x</em>'<em>y</em>"</c>, where <c><em>x</em></c> and <c><em>y</em></c> are numbers.
         /// </summary>
-        private static readonly Regex FeetAndInches = new(@"\d+'\d+" + '"');
+        private static readonly Regex FeetAndInches = new(@$"\d+[{StringUtils.FancyApostrophes.JoinToString()}]\d+[{StringUtils.FancyQuotes.JoinToString()}]");
         /// <summary>
         /// Matches <c><em>z</em>cm</c>, where <c><em>z</em></c> is a number.
         /// </summary>
@@ -27,7 +27,7 @@ namespace grp
         {
             new(FeetAndInches, delegate(string s)
             {
-                string[] split = s.WithoutQuotes().Split("'");
+                string[] split = s.Without(StringUtils.FancyQuotes).Split(StringUtils.FancyApostrophes);
                 int feet = int.Parse(split[0]);
                 int inches = int.Parse(split[1]);
                 return new(feet, inches);

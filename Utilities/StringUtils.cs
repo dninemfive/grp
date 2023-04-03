@@ -11,6 +11,8 @@ namespace grp
     /// </summary>
     public static class StringUtils
     {
+        public static readonly char[] FancyApostrophes = new[] { '\'', '‘', '’' };
+        public static readonly char[] FancyQuotes = new[] { '"', '“', '”' };
         /// <summary></summary>
         /// <typeparam name="T">The type of the objects to print.</typeparam>
         /// <param name="values">An enumerable holding the objects to print paired with the width of their respective columns.</param>
@@ -56,10 +58,15 @@ namespace grp
             for (int i = 0; i < times; i++) result += c;
             return result;
         }
-        /// <summary></summary>
-        /// <param name="s">The string whose quotes to remove.</param>
-        /// <returns>A copy of <c>s</c> without any instances of the character <c>"</c>.</returns>
-        public static string WithoutQuotes(this string s) => s.Replace('"'.ToString(), "");
+        /// <summary>Removes a set of characters from a string.</summary>
+        /// <param name="s">The string from which the characters will be removed.</parm>
+        /// <param name="chars">The characters to be removed.</parm>
+        /// <returns>A copy of <c>s</c> without any instances of the specified characters..</returns>
+        public static string Without(this string s, IEnumerable<char> chars)
+        {
+            foreach (char c in chars) s = s.Replace("" + c, "");
+            return s;
+        }
         /// <summary>
         /// Gets a standard debug name for a given file created by a given method name.
         /// </summary>
@@ -67,5 +74,6 @@ namespace grp
         /// <param name="hash">A hash vaguely related to the file being created.</param>
         /// <returns>A string which can be used as a filename for the file being created.</returns>
         public static string DebugName(string methodName, int hash) => $"debug/{methodName}_{DateTime.Now:yyMMdd'-'HH' 'mm' 'ss}_{hash}.png";
+        public static string JoinToString(this IEnumerable<char> chars) => chars.Select(x => "" + x).Aggregate((x, y) => x + y);
     }
 }
