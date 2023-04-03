@@ -11,7 +11,13 @@ namespace grp
     /// </summary>
     public static class StringUtils
     {
+        /// <summary>
+        /// Normal apostrophes plus the weird ones that iPhones automatically replace the normal ones with.
+        /// </summary>
         public static readonly char[] FancyApostrophes = new[] { '\'', '‘', '’' };
+        /// <summary>
+        /// Normal quotation marks plus the weird ones that iPhones automatically replace the normal ones with.
+        /// </summary>
         public static readonly char[] FancyQuotes = new[] { '"', '“', '”' };
         /// <summary></summary>
         /// <typeparam name="T">The type of the objects to print.</typeparam>
@@ -74,6 +80,11 @@ namespace grp
         /// <param name="hash">A hash vaguely related to the file being created.</param>
         /// <returns>A string which can be used as a filename for the file being created.</returns>
         public static string DebugName(string methodName, int hash) => $"debug/{methodName}_{DateTime.Now:yyMMdd'-'HH' 'mm' 'ss}_{hash}.png";
+        /// <summary>
+        /// Join a set of characters to a string.
+        /// </summary>
+        /// <param name="chars">The characters to join.</param>
+        /// <returns>The specified characters, joined to a string.</returns>
         public static string JoinToString(this IEnumerable<char> chars) => chars.Select(x => "" + x).Aggregate((x, y) => x + y);
     }
 }

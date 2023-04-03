@@ -31,8 +31,17 @@ namespace grp
         /// The path to the image which will be appended to credit the picrew author and the group for which the image was generated.
         /// </summary>
         public static readonly string WatermarkForAddition = Path.Join(BaseFolder, "watermark_autocropped.png");
+        /// <summary>
+        /// The path to the P12 file used for Google authentication.
+        /// </summary>
         public static readonly string GoogleAuth = Path.Join(BaseFolder, "google auth.p12.secret");
+        /// <summary>
+        /// A file containing the email used for Google authentication.
+        /// </summary>
         public static readonly string GoogleKeyEmail = Path.Join(BaseFolder, "email.txt.secret");
+        /// <summary>
+        /// A file containing the ID of the TSV file in Google Drive.
+        /// </summary>
         public static readonly string FileId = Path.Join(BaseFolder, "file id.txt.secret");
     }
 }

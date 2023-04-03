@@ -95,6 +95,9 @@ namespace grp
         /// </summary>
         /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
         public static ServiceAccountCredential Credential => new(CredentialInitializer);
+        /// <summary>
+        /// Gets the Drive service using the <see cref="Credential"/> previously established.
+        /// </summary>
         public static DriveService DriveService => new(new BaseClientService.Initializer() 
         {
             HttpClientInitializer = Credential,
@@ -119,7 +122,7 @@ namespace grp
                 return filename.AbsoluteOrInBaseFolder();
             } catch(Exception e)
             {
-                Console.WriteLine($"Error when downloading file from Drive! Message: `{e.Message}`");
+                Console.WriteLine($"Error when downloading file from Drive!\n\t{e.Message}");
                 return null;
             }
         }

@@ -59,7 +59,5 @@ namespace grp
             using FileStream fs = File.Open(path.AbsoluteOrInImageFolder(), FileMode.Create);
             img.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
         }
-        public static string GetJsonProperty(this string path, string key) 
-            => JsonDocument.Parse(File.OpenRead(path.AbsoluteOrInImageFolder())).RootElement.GetProperty(key).ToString();
     }
 }

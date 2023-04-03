@@ -31,7 +31,6 @@ foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
     latestUniqueUsers.Add(users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).First());
 }
 latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
-// foreach (User user in latestUniqueUsers) user.Image!.SaveTo($"debug/{user.DiscordId}.png");
 #endregion load users
 #region construct image
 int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)maxUsersPerRow);
@@ -43,7 +42,6 @@ foreach(IEnumerable<User> row in rows)
     List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
     rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
     string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
-    // Console.WriteLine(rowDescription);
     imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
     TextCopy.ClipboardService.SetText(imageDescription);
 }
