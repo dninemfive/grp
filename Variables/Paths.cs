@@ -32,6 +32,7 @@ namespace grp
         /// </summary>
         public static readonly string WatermarkForAddition = Path.Join(BaseFolder, "watermark_autocropped.png");
         public static readonly string GoogleAuth = Path.Join(BaseFolder, "google auth.p12.secret");
+        public static readonly string GoogleKeyEmail = Path.Join(BaseFolder, "email.txt.secret");
         public static readonly string FileId = Path.Join(BaseFolder, "file id.txt.secret");
     }
 }

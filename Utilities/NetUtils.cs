@@ -88,7 +88,7 @@ namespace grp
         /// </summary>
         /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
         private static ServiceAccountCredential.Initializer CredentialInitializer 
-            => new ServiceAccountCredential.Initializer(Paths.GoogleAuth.GetJsonProperty("client_email")) { Scopes = new[] { DriveService.Scope.Drive} }
+            => new ServiceAccountCredential.Initializer(File.ReadAllText(Paths.GoogleKeyEmail)) { Scopes = new[] { DriveService.Scope.Drive} }
                     .FromCertificate(Certificate);
         /// <summary>
         /// Constructs a credential using the <see cref="CredentialInitializer"/>.
@@ -104,12 +104,13 @@ namespace grp
         /// Attempts to download the data TSV file from a Drive URL to the <see cref="Paths.BaseFolder">default base folder</see> 
         /// and prints whether or not it was successful, as well as the response code.
         /// </summary>
+        /// <remarks>The file must be shared, through the Sheets UI, with the email associated with the service account.</remarks>
         /// <param name="url">The URL of the file to download.</param>
         /// <param name="fileName">The name the file should have when downloaded.</param>
         /// <returns>The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.</returns>
         public static string? DownloadTsv(string fileId, string filename)
         {
-            FilesResource.ExportRequest request = new(DriveService, fileId, "text/tsv");
+            FilesResource.ExportRequest request = new(DriveService, fileId, "text/tab-separated-values");
             using FileStream fs = new(filename.AbsoluteOrInBaseFolder(), FileMode.Create);
             IDownloadProgress progress = request.DownloadWithStatus(fs);
             try
@@ -118,7 +119,7 @@ namespace grp
                 return filename.AbsoluteOrInBaseFolder();
             } catch(Exception e)
             {
-                Console.WriteLine($"Error when downloading file from Drive! Message: {e.Message}");
+                Console.WriteLine($"Error when downloading file from Drive! Message: `{e.Message}`");
                 return null;
             }
         }

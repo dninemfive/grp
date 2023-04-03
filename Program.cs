@@ -4,11 +4,10 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using System.Xml.Schema;
 
-NetUtils.DownloadTsv(File.ReadAllText(Paths.FileId), "test.tsv");
-return;
 const int maxUsersPerRow = 12;
 #region prepare database
 Directory.CreateDirectory(Paths.ImageFolder);
+NetUtils.DownloadTsv(File.ReadAllText(Paths.FileId), Paths.DataFile);
 List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
