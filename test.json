@@ -1,1 +1,18 @@
-{}
+{
+  "Paths": {
+    "BaseFolder": "test",
+    "ImageFolder": "/images/",
+    "DebugFolder": "/debug/",
+    "TsvFile": "data.tsv",
+    "WatermarkToSubtract": "watermark_subtract.png",
+    "WatermarkToAdd": "watermark_add.png",
+    "GoogleAuthKey": null
+  },
+  "Debug": false,
+  "SavePerUserImages": false,
+  "CopyDescToClipboard": true,
+  "SaveDescToFile": false,
+  "GoogleAuthEmail": null,
+  "GoogleFileId": null,
+  "MaxUsersPerRow": 12
+}
