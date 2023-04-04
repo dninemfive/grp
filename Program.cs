@@ -4,6 +4,12 @@ using System.Text.Json;
 using System.Xml.Schema;
 using System.Windows;
 
+Config cfg = new()
+{
+    Paths = new() { BaseFolder = "test" }
+};
+File.WriteAllText(Path.Join(Paths.BaseFolder, "test.json"), JsonSerializer.Serialize(cfg, new JsonSerializerOptions() { WriteIndented = true }));
+return;
 const int maxUsersPerRow = 12;
 #region prepare database
 Directory.CreateDirectory(Paths.ImageFolder);
