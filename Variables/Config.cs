@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
@@ -11,8 +12,30 @@ namespace grp
     internal class Config
     {
         public static Config Current;
+        public static void Load(string path)
+        {
+            Config? config = JsonSerializer.Deserialize<Config>(File.ReadAllText(path));
+            if (config is null) throw new Exception($"Could not find config file at path `{path}`!");
+            Current = config;
+        }
         public class ConfigPaths
         {
+            public class ConfigGoogleOptions
+            {
+                [JsonInclude]
+                public string AuthKey;
+                [JsonInclude]
+                public string AuthEmail;
+                [JsonInclude]
+                public string FileId;
+                public ConfigGoogleOptions() { }
+                public ConfigGoogleOptions(string authkey, string email, string fileid)
+                {
+                    AuthKey = authkey;
+                    AuthEmail = email;
+                    FileId = fileid;
+                }
+            }
             [JsonInclude]
             public string BaseFolder;
             [JsonInclude]
@@ -26,21 +49,7 @@ namespace grp
             [JsonInclude]
             public string WatermarkToAdd = "watermark_add.png";
             [JsonInclude]
-            public string? GoogleAuthKey = null;
-            public ConfigPaths() { }
-            /*
-            [JsonConstructor]
-            public ConfigPaths(string baseFolder, string imageFolder, string debugFolder, 
-                string tsvFile, string watermarkToSubtract, string watermarkToAdd, string? googleAuthKey)
-            {
-                BaseFolder = baseFolder;
-                ImageFolder = imageFolder;
-                DebugFolder = debugFolder;
-                TsvFile = tsvFile;
-                WatermarkToSubtract = watermarkToSubtract;
-                WatermarkToAdd = watermarkToAdd;
-                GoogleAuthKey = googleAuthKey;
-            }*/
+            public ConfigGoogleOptions? GoogleOptions = null;
         }
         [JsonInclude]
         public ConfigPaths Paths;
@@ -51,11 +60,7 @@ namespace grp
         [JsonInclude]
         public bool CopyDescToClipboard = true;
         [JsonInclude]
-        public bool SaveDescToFile = false;
-        [JsonInclude]
-        public string? GoogleAuthEmail = null;
-        [JsonInclude]
-        public string? GoogleFileId = null;
+        public bool SaveDescToFile = false;        
         [JsonInclude]
         public int MaxUsersPerRow = 12;
     }
