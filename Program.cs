@@ -20,7 +20,7 @@ Config.Load(configPath ?? Paths.DefaultConfigFile);
 #endregion load config
 #region prepare database
 Paths.CreateFolders();
-if(Config.Current.GoogleAuth is not null) NetUtils.DownloadTsv(Config.Current.GoogleAuth.FileId, Paths.TsvFile);
+if(Config.Current.GoogleAuth is not null && !Config.Current.SkipGoogleDownload) NetUtils.DownloadTsv(Config.Current.GoogleAuth.FileId, Paths.TsvFile);
 List<string> rawTsv = File.ReadAllLines(Paths.TsvFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
@@ -55,10 +55,10 @@ foreach(IEnumerable<User> row in rows)
     List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
     rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
     string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
-    imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
-    TextCopy.ClipboardService.SetText(imageDescription);
+    imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";    
 }
-File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
+if (Config.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
+if (Config.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
 using Image result = ImageUtils.Merge(new Image[]
 {
     Images.WatermarkToAdd,

@@ -82,7 +82,7 @@ namespace grp
         /// </summary>
         /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.<br/>
         /// <br/> Apparently the password is always <c>notasecret</c> and that can't be changed, which is strange.</remarks>
-        private static X509Certificate2 Certificate // => new(Paths.GoogleKey, "notasecret", X509KeyStorageFlags.Exportable);
+        private static X509Certificate2 Certificate
         {
             get
             {
