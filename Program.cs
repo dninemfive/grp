@@ -53,7 +53,7 @@ string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to r
 foreach(IEnumerable<User> row in rows)
 {
     List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
-    rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.69f));
+    rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.80f));
     string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
     imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";    
 }

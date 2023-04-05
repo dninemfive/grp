@@ -87,8 +87,9 @@ namespace grp
             {
                 Mode = ResizeMode.BoxPad,
                 Position = AnchorPositionMode.Bottom,
-                Size = new(Image.Height, Image.Height)
+                Size = new((int)(Height.Maximum.Ratio * 600), Image.Height)
             }));
+            if (Config.Current.SavePerUserImages) Image.SaveTo(Path.Join(Paths.DebugFolder, FileName));
         }
         /// <summary>
         /// <inheritdoc cref="User(TsvRow)" path="/summary"/>
