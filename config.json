@@ -1,0 +1,16 @@
+{
+  "Paths": {
+    "BaseFolder": "C:/Users/dninemfive/Documents/workspaces/misc/grp",
+    "ImageFolder": "images",
+    "DebugFolder": "debug",
+    "TsvFile": "data.tsv",
+    "WatermarkToSubtract": "watermark_subtract.png",
+    "WatermarkToAdd": "watermark_add.png",
+    "GoogleAuth": "google auth.json.secret"
+  },
+  "Debug": false,
+  "SavePerUserImages": false,
+  "CopyDescToClipboard": true,
+  "SaveDescToFile": false,
+  "MaxUsersPerRow": 12
+}

@@ -59,5 +59,13 @@ namespace grp
             using FileStream fs = File.Open(path.AbsoluteOrInImageFolder(), FileMode.Create);
             img.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
         }
+        /// <summary>
+        /// Returns the folder the executable is in.
+        /// </summary>
+        /// <remarks>
+        /// Code from <see href="https://iq.direct/blog/51-how-to-get-the-current-executable-s-path-in-csharp.html">here</see>.
+        /// Uses the null-forgiving operator <c>!</c> because the current assembly's location Should™ always be a valid path.
+        /// </remarks>
+        public static string WorkingDirectory => Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!;
     }
 }

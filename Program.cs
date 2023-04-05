@@ -5,27 +5,23 @@ using System.Xml.Schema;
 using System.Windows;
 using System.Runtime.InteropServices;
 
-void PrintAndSave(string s, string name)
+#region load config
+string? configPath = null;
+if (args.Length > 1)
 {
-    Console.WriteLine($"{s}\n");
-    File.WriteAllText(Path.Join(Paths.BaseFolder, name), s);
-}
-Config cfg = new()
-{
-    Paths = new()
+    string firstArg = args.First();
+    if (!File.Exists(firstArg))
     {
-        BaseFolder = "C:/Users/dninemfive/Documents/workspaces/misc/grp"
+        Console.WriteLine($"Could not find config file at `{firstArg}`! Defaulting to `{Paths.DefaultConfigFile}`.");
     }
-};
-PrintAndSave(, "config.json");
-GoogleAuthConfig gac = new("a", "b", "c");
-PrintAndSave(JsonSerializer.Serialize(gac, new JsonSerializerOptions() { WriteIndented = true }), "google auth.json.secret");
-return;
-const int maxUsersPerRow = 12;
+    else configPath = firstArg;
+}
+Config.Load(configPath ?? Paths.DefaultConfigFile);
+#endregion load config
 #region prepare database
-Directory.CreateDirectory(Paths.ImageFolder);
-NetUtils.DownloadTsv(File.ReadAllText(Paths.FileId), Paths.DataFile);
-List<string> rawTsv = File.ReadAllLines(Paths.DataFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
+Paths.CreateFolders();
+if(Config.Current.GoogleAuth is not null) NetUtils.DownloadTsv(Config.Current.GoogleAuth.FileId, Paths.TsvFile);
+List<string> rawTsv = File.ReadAllLines(Paths.TsvFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
     ("discord id", 42),
@@ -50,7 +46,7 @@ foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
 latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
 #endregion load users
 #region construct image
-int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)maxUsersPerRow);
+int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)Config.Current.MaxUsersPerRow);
 IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderByDescending(x => x.Height).BreakInto(rowCt);
 List<Image> rowImages = new();
 string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";

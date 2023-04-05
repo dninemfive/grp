@@ -87,9 +87,15 @@ namespace grp
         /// Constructs a ServiceAccountCredential initializer from the <see cref="Certificate"/>.
         /// </summary>
         /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.</remarks>
-        private static ServiceAccountCredential.Initializer CredentialInitializer 
-            => new ServiceAccountCredential.Initializer(File.ReadAllText(Paths.GoogleKeyEmail)) { Scopes = new[] { DriveService.Scope.Drive} }
+        private static ServiceAccountCredential.Initializer CredentialInitializer
+        {
+            get
+            {
+                if (Config.Current.GoogleAuth is null) throw new Exception("Attempted to get Google account credentials, but no auth config was found!");
+                return new ServiceAccountCredential.Initializer(Config.Current.GoogleAuth.Email) { Scopes = new[] { DriveService.Scope.Drive } }
                     .FromCertificate(Certificate);
+            }
+        }
         /// <summary>
         /// Constructs a credential using the <see cref="CredentialInitializer"/>.
         /// </summary>
@@ -107,8 +113,8 @@ namespace grp
         /// Attempts to download the data TSV file from a Drive URL to the <see cref="Paths.BaseFolder">default base folder</see> 
         /// and prints whether or not it was successful, as well as the response code.
         /// </summary>
-        /// <remarks>The file must be shared, through the Sheets UI, with the email associated with the service account.</remarks>
-        /// <param name="url">The URL of the file to download.</param>
+        /// <remarks>The file must be shared, through the Sheets UI, with the <see cref="GoogleAuthConfig.Email">email associated with the service account</see>.</remarks>
+        /// <param name="fileId">The <see cref="GoogleAuthConfig.FileId">Sheets ID</see> of the file to download.</param>
         /// <param name="fileName">The name the file should have when downloaded.</param>
         /// <returns>The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.</returns>
         public static string? DownloadTsv(string fileId, string filename)

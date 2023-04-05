@@ -23,9 +23,9 @@ namespace grp
             [JsonInclude]
             public string BaseFolder;
             [JsonInclude]
-            public string ImageFolder = "/images/";
+            public string ImageFolder = "images";
             [JsonInclude]
-            public string DebugFolder = "/debug/";
+            public string DebugFolder = "debug";
             [JsonInclude]
             public string TsvFile = "data.tsv";
             [JsonInclude]
@@ -40,6 +40,8 @@ namespace grp
         [JsonInclude]
         public bool Debug = false;
         [JsonInclude]
+        public bool SkipGoogleDownload = false;
+        [JsonInclude]
         public bool SavePerUserImages = false;
         [JsonInclude]
         public bool CopyDescToClipboard = true;
@@ -47,20 +49,32 @@ namespace grp
         public bool SaveDescToFile = false;        
         [JsonInclude]
         public int MaxUsersPerRow = 12;
+        [JsonIgnore]
+        private GoogleAuthConfig? _googleAuth = null;
+        [JsonIgnore]
+        public GoogleAuthConfig? GoogleAuth
+        {
+            get
+            {
+                if (Paths.GoogleAuth is null) return null;
+                _googleAuth ??= JsonSerializer.Deserialize<GoogleAuthConfig>(File.ReadAllText(Paths.GoogleAuth));
+                return _googleAuth;
+            }
+        }
     }
     public class GoogleAuthConfig
     {
         [JsonInclude]
-        public string AuthKey;
+        public string Key;
         [JsonInclude]
-        public string AuthEmail;
+        public string Email;
         [JsonInclude]
         public string FileId;
-        public GoogleAuthConfig(string authkey, string email, string fileid)
+        public GoogleAuthConfig(string key, string email, string fileId)
         {
-            AuthKey = authkey;
-            AuthEmail = email;
-            FileId = fileid;
+            Key = key;
+            Email = email;
+            FileId = fileId;
         }
     }
 }

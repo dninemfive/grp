@@ -11,37 +11,42 @@ namespace grp
     /// </summary>
     public static class Paths
     {
+        public static void CreateFolders()
+        {
+            foreach(string folder in new[]  { BaseFolder, ImageFolder, DebugFolder})
+            {
+                Directory.CreateDirectory(folder);
+            }
+        }
         /// <summary>
         /// The absolute path in which this program will save its data.
         /// </summary>
-        public static readonly string BaseFolder = "C:/Users/dninemfive/Documents/workspaces/misc/grp";
+        public static string BaseFolder => Config.Current.Paths.BaseFolder ?? IoUtils.WorkingDirectory;
+        public static readonly string DefaultConfigFile = Path.Join(BaseFolder, "config.json");
         /// <summary>
         /// The folder in which the images will be saved within the base folder.
         /// </summary>
-        public static readonly string ImageFolder = Path.Join(BaseFolder, "images");
+        public static string ImageFolder => Path.Join(BaseFolder, Config.Current.Paths.ImageFolder);
+        public static string DebugFolder => Path.Join(BaseFolder, Config.Current.Paths.DebugFolder);
         /// <summary>
         /// The path to the TSV file which will be read to parse data from.
         /// </summary>
-        public static readonly string DataFile = Path.Join(BaseFolder, "grp responses.tsv");
+        public static string TsvFile => Path.Join(BaseFolder, Config.Current.Paths.TsvFile);
         /// <summary>
         /// The path to the image used to mask out the watermark from each picrew in order to properly join them together.
         /// </summary>
-        public static readonly string WatermarkForSubtraction = Path.Join(BaseFolder, "watermark.png");
+        public static string WatermarkToSubtract => Path.Join(BaseFolder, Config.Current.Paths.WatermarkToSubtract);
         /// <summary>
         /// The path to the image which will be appended to credit the picrew author and the group for which the image was generated.
         /// </summary>
-        public static readonly string WatermarkForAddition = Path.Join(BaseFolder, "watermark_autocropped.png");
+        public static string WatermarkToAdd => Path.Join(BaseFolder, Config.Current.Paths.WatermarkToAdd);
         /// <summary>
         /// The path to the P12 file used for Google authentication.
         /// </summary>
-        public static readonly string GoogleAuth = Path.Join(BaseFolder, "google auth.p12.secret");
-        /// <summary>
-        /// A file containing the email used for Google authentication.
-        /// </summary>
-        public static readonly string GoogleKeyEmail = Path.Join(BaseFolder, "email.txt.secret");
+        public static string GoogleAuth => Path.Join(BaseFolder, "google auth.p12.secret");
         /// <summary>
         /// A file containing the ID of the TSV file in Google Drive.
         /// </summary>
-        public static readonly string FileId = Path.Join(BaseFolder, "file id.txt.secret");
+        public static string FileId => Path.Join(BaseFolder, "file id.txt.secret");
     }
 }
