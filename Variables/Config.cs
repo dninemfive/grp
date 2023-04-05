@@ -19,9 +19,12 @@ namespace grp
             Current = config;
         }
         public class ConfigPaths
-        {            
+        {
             [JsonInclude]
+            // set by jsonserializer
+#pragma warning disable CS0649
             public string BaseFolder;
+#pragma warning restore CS0649
             [JsonInclude]
             public string ImageFolder = "images";
             [JsonInclude]
@@ -36,7 +39,10 @@ namespace grp
             public string? GoogleAuth = null;
         }
         [JsonInclude]
+        // set by jsonserializer
+#pragma warning disable CS0649
         public ConfigPaths Paths;
+#pragma warning restore CS0649
         [JsonInclude]
         public bool Debug = false;
         [JsonInclude]
@@ -57,7 +63,7 @@ namespace grp
             get
             {
                 if (Paths.GoogleAuth is null) return null;
-                _googleAuth ??= JsonSerializer.Deserialize<GoogleAuthConfig>(File.ReadAllText(Paths.GoogleAuth));
+                _googleAuth ??= JsonSerializer.Deserialize<GoogleAuthConfig>(File.ReadAllText(grp.Paths.GoogleConfig));
                 return _googleAuth;
             }
         }

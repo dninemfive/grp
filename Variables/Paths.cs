@@ -21,7 +21,7 @@ namespace grp
         /// <summary>
         /// The absolute path in which this program will save its data.
         /// </summary>
-        public static string BaseFolder => Config.Current.Paths.BaseFolder ?? IoUtils.WorkingDirectory;
+        public static string BaseFolder => Config.Current?.Paths.BaseFolder ?? IoUtils.WorkingDirectory;
         public static readonly string DefaultConfigFile = Path.Join(BaseFolder, "config.json");
         /// <summary>
         /// The folder in which the images will be saved within the base folder.
@@ -41,12 +41,12 @@ namespace grp
         /// </summary>
         public static string WatermarkToAdd => Path.Join(BaseFolder, Config.Current.Paths.WatermarkToAdd);
         /// <summary>
+        /// The path to the Google config file.
+        /// </summary>
+        public static string GoogleConfig => Path.Join(BaseFolder, Config.Current.Paths.GoogleAuth);
+        /// <summary>
         /// The path to the P12 file used for Google authentication.
         /// </summary>
-        public static string GoogleAuth => Path.Join(BaseFolder, "google auth.p12.secret");
-        /// <summary>
-        /// A file containing the ID of the TSV file in Google Drive.
-        /// </summary>
-        public static string FileId => Path.Join(BaseFolder, "file id.txt.secret");
+        public static string GoogleKey => Path.Join(BaseFolder, Config.Current.GoogleAuth?.Key);
     }
 }

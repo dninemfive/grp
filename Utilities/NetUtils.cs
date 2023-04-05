@@ -82,7 +82,14 @@ namespace grp
         /// </summary>
         /// <remarks>Largely a copy of code from <see href="https://www.daimto.com/google-drive-authentication-c/">this example</see>.<br/>
         /// <br/> Apparently the password is always <c>notasecret</c> and that can't be changed, which is strange.</remarks>
-        private static X509Certificate2 Certificate => new(Paths.GoogleAuth, "notasecret", X509KeyStorageFlags.Exportable);
+        private static X509Certificate2 Certificate // => new(Paths.GoogleKey, "notasecret", X509KeyStorageFlags.Exportable);
+        {
+            get
+            {
+                if (Config.Current.GoogleAuth is null) throw new Exception("Attempted to get Google account certificate, but no auth config was found!");
+                return new(Paths.GoogleKey, "notasecret", X509KeyStorageFlags.Exportable);
+            }
+        }
         /// <summary>
         /// Constructs a ServiceAccountCredential initializer from the <see cref="Certificate"/>.
         /// </summary>
