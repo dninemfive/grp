@@ -5,23 +5,21 @@ using System.Xml.Schema;
 using System.Windows;
 using System.Runtime.InteropServices;
 
+void PrintAndSave(string s, string name)
+{
+    Console.WriteLine($"{s}\n");
+    File.WriteAllText(Path.Join(Paths.BaseFolder, name), s);
+}
 Config cfg = new()
 {
     Paths = new()
     {
-        BaseFolder = "C:/Users/dninemfive/Documents/workspaces/misc/grp",
-        GoogleOptions = new(Paths.GoogleAuth, Paths.GoogleKeyEmail, Paths.FileId)
+        BaseFolder = "C:/Users/dninemfive/Documents/workspaces/misc/grp"
     }
 };
-string cfgJson = JsonSerializer.Serialize(cfg, new JsonSerializerOptions() { WriteIndented = true });
-string testPath = Path.Join(Paths.BaseFolder, "test.json");
-Console.WriteLine(cfgJson);
-File.WriteAllText(testPath, cfgJson);
-Console.WriteLine("\n=====\n");
-Config? cfg2 = JsonSerializer.Deserialize<Config>(File.ReadAllText(testPath));
-string cfg2Json = JsonSerializer.Serialize(cfg2, new JsonSerializerOptions() { WriteIndented = true });
-Console.WriteLine(cfg2Json);
-File.WriteAllText(testPath, cfg2Json);
+PrintAndSave(, "config.json");
+GoogleAuthConfig gac = new("a", "b", "c");
+PrintAndSave(JsonSerializer.Serialize(gac, new JsonSerializerOptions() { WriteIndented = true }), "google auth.json.secret");
 return;
 const int maxUsersPerRow = 12;
 #region prepare database

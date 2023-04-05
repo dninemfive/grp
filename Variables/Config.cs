@@ -19,23 +19,7 @@ namespace grp
             Current = config;
         }
         public class ConfigPaths
-        {
-            public class ConfigGoogleOptions
-            {
-                [JsonInclude]
-                public string AuthKey;
-                [JsonInclude]
-                public string AuthEmail;
-                [JsonInclude]
-                public string FileId;
-                public ConfigGoogleOptions() { }
-                public ConfigGoogleOptions(string authkey, string email, string fileid)
-                {
-                    AuthKey = authkey;
-                    AuthEmail = email;
-                    FileId = fileid;
-                }
-            }
+        {            
             [JsonInclude]
             public string BaseFolder;
             [JsonInclude]
@@ -49,7 +33,7 @@ namespace grp
             [JsonInclude]
             public string WatermarkToAdd = "watermark_add.png";
             [JsonInclude]
-            public ConfigGoogleOptions? GoogleOptions = null;
+            public string? GoogleAuth = null;
         }
         [JsonInclude]
         public ConfigPaths Paths;
@@ -63,5 +47,20 @@ namespace grp
         public bool SaveDescToFile = false;        
         [JsonInclude]
         public int MaxUsersPerRow = 12;
+    }
+    public class GoogleAuthConfig
+    {
+        [JsonInclude]
+        public string AuthKey;
+        [JsonInclude]
+        public string AuthEmail;
+        [JsonInclude]
+        public string FileId;
+        public GoogleAuthConfig(string authkey, string email, string fileid)
+        {
+            AuthKey = authkey;
+            AuthEmail = email;
+            FileId = fileid;
+        }
     }
 }

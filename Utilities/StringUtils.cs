@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace grp
@@ -45,6 +46,7 @@ namespace grp
         /// <returns>A string of the format <c>[item1, item2, ... itemN]</c> representing the items in <c>enumerable</c>.</returns>
         public static string ListNotation<T>(this IEnumerable<T> enumerable)
             => $"[{enumerable.Select(x => x.PrintNullable()).Aggregate((a, b) => $"{a}, {b}")}]";
+        public static string PrettyPrint(this object obj) => JsonSerializer.Serialize(obj, new JsonSerializerOptions() { WriteIndented = true });
         /// <summary>
         /// Represents an object in human-readable format, even if it's <see langword="null"/>.
         /// </summary>
