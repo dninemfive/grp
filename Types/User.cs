@@ -75,6 +75,7 @@ namespace grp
                 File.Delete(Path.Join(Paths.ImageFolder, FileName));
                 throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
             }
+            ExcessAlpha = Image.MultiplyAlpha(Images.AlphaMask, SplitId.name).AlphaSum();
             Image = Image.Mask(Images.WatermarkMask);            
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
@@ -108,5 +109,6 @@ namespace grp
         /// The filename which will be given to this user's image when saved.
         /// </summary>
         public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
+        public long ExcessAlpha { get; private set; } = -1;
     }
 }

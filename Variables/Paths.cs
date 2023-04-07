@@ -48,5 +48,6 @@ namespace grp
         /// The path to the P12 file used for Google authentication.
         /// </summary>
         public static string GoogleKey => Path.Join(BaseFolder, Config.Current.GoogleAuth?.Key);
+        public static string AlphaMask => Path.Join(BaseFolder, "images/mask.png");
     }
 }

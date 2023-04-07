@@ -44,10 +44,15 @@ foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
     latestUniqueUsers.Add(users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).First());
 }
 latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
+foreach (User user in latestUniqueUsers.OrderByDescending(x => x.ExcessAlpha)) Console.WriteLine($"{user.DiscordId,-32} {user.ExcessAlpha}");
 #endregion load users
 #region construct image
+float medianExcessAlpha = latestUniqueUsers.Select(x => (float)x.ExcessAlpha).Median((x, y) => MiscUtils.Mean(x, y));
 int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)Config.Current.MaxUsersPerRow);
-IEnumerable<IEnumerable<User>> rows = latestUniqueUsers.OrderByDescending(x => x.Height).BreakInto(rowCt);
+IEnumerable<IEnumerable<User>> rows = latestUniqueUsers
+                                        .OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - medianExcessAlpha))
+                                        .ThenByDescending(x => x.Height)
+                                        .BreakInto(rowCt);
 List<Image> rowImages = new();
 string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";
 foreach(IEnumerable<User> row in rows)

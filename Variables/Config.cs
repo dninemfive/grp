@@ -17,6 +17,7 @@ namespace grp
             Config? config = JsonSerializer.Deserialize<Config>(File.ReadAllText(path));
             if (config is null) throw new Exception($"Could not find config file at path `{path}`!");
             Current = config;
+            Console.WriteLine($"Loaded config from `{path}`.");
         }
         public class ConfigPaths
         {

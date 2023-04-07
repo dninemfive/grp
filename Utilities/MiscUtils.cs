@@ -52,5 +52,13 @@ namespace grp
             if (t.CompareTo(max) > 0) return max;
             return t;
         }
+        public static T Median<T>(this IEnumerable<T> enumerable, Func<T, T, T> evenFunction)
+        {
+            IEnumerable<T> ordered = enumerable.OrderBy(x => x);
+            if (enumerable.Count().IsOdd()) return ordered.ElementAt(enumerable.Count() / 2);
+            return evenFunction(ordered.ElementAt((enumerable.Count() / 2) - 1), ordered.ElementAt(enumerable.Count() / 2));
+            
+        }
+        public static bool IsOdd(this int i) => i % 2 == 1;
     }
 }

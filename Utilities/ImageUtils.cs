@@ -168,6 +168,42 @@ namespace grp
         /// </summary>
         /// <param name="pixel">The pixel to check for full transparency.</param>
         /// <returns><see langword="true"/> if the pixel is fully transparent, i.e. has an opacity of 0, or <see langword="false"/> otherwise.</returns>
-        public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;        
+        public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;
+        public static long AlphaSum(this Image image)
+        {
+            Image<Rgba32> rgbImage = image.CloneAs<Rgba32>();
+            long result = 0;
+            rgbImage.ProcessPixelRows(accessor =>
+            {
+                for(int y = 0; y < accessor.Height; y++)
+                {
+                    Span<Rgba32> pixelRow = accessor.GetRowSpan(y);
+                    for (int x = 0; x < pixelRow.Length; x++) result += pixelRow[x].A;
+                }
+            });
+            return result;
+        }
+        public static Image MultiplyAlpha(this Image a, Image b, string? debugUsername = null)
+        {
+            if (a.Width != b.Width || a.Height != b.Height) throw new NotImplementedException();
+            Image<Rgba32> rgb_a = a.CloneAs<Rgba32>(),
+                          rgb_b = b.CloneAs<Rgba32>();
+            Image<Rgba32> result = new(a.Width, a.Height);
+            for(int x = 0; x < a.Width; x++)
+            {
+                for(int y = 0; y < a.Height; y++)
+                {
+                    result[x, y] = rgb_a[x, y].MultiplyAlpha(rgb_b[x, y]);
+                }
+            }
+            result.SaveTo(StringUtils.DebugName($"MultiplyAlpha{debugUsername ?? ""}", result.GetHashCode()));
+            return result;
+        }
+        public static Rgba32 MultiplyAlpha(this Rgba32 a, Rgba32 b)
+        {
+            byte alpha = (byte)(a.A.ToFloat() * b.A.ToFloat() * byte.MaxValue);
+            return new(255, 255, 255, alpha);
+        }
+        public static float ToFloat(this byte b) => b / byte.MaxValue;
     }
 }
