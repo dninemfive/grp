@@ -1,4 +1,5 @@
-﻿using System;
+﻿using d9.utl;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -58,9 +59,9 @@ namespace grp
         public static Image<Rgba32> GenerateImageWhichFits(IEnumerable<int> widths, IEnumerable<int> heights, MergeDirection direction, float overlap) => direction switch
         {
             MergeDirection.BottomTop or MergeDirection.TopBottom => new(widths.Max(), 
-                heights.Select(x => (int)(x * (1 - overlap))).Sum() + (int)MiscUtils.Mean(heights.First(), heights.Last())),
+                heights.Select(x => (int)(x * (1 - overlap))).Sum() + (int)MathUtils.Mean(heights.First(), heights.Last())),
             MergeDirection.LeftRight or MergeDirection.RightLeft => new(widths.Select(x => (int)(x * (1 - overlap) 
-            + (int)MiscUtils.Mean(widths.First(), widths.Last()))).Sum(), heights.Max()),
+            + (int)MathUtils.Mean(widths.First(), widths.Last()))).Sum(), heights.Max()),
             _ => throw new ArgumentOutOfRangeException(nameof(direction))
         };
         /// <summary>

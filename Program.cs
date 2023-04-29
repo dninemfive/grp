@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Xml.Schema;
 using System.Windows;
 using System.Runtime.InteropServices;
+using d9.utl;
 
 #region load config
 string? configPath = null;
@@ -47,10 +48,11 @@ latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
 foreach (User user in latestUniqueUsers.OrderByDescending(x => x.ExcessAlpha)) Console.WriteLine($"{user.DiscordId,-32} {user.ExcessAlpha}");
 #endregion load users
 #region construct image
-float medianExcessAlpha = latestUniqueUsers.Select(x => (float)x.ExcessAlpha).Median((x, y) => MiscUtils.Mean(x, y));
+// float medianExcessAlpha = latestUniqueUsers.Select(x => (float)x.ExcessAlpha).Median((x, y) => MiscUtils.Mean(x, y));
+long maxNormalExcessAlpha = 2137666; // determined by inspection
 int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)Config.Current.MaxUsersPerRow);
 IEnumerable<IEnumerable<User>> rows = latestUniqueUsers
-                                        .OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - medianExcessAlpha))
+                                        .OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - maxNormalExcessAlpha))
                                         .ThenByDescending(x => x.Height)
                                         .BreakInto(rowCt);
 List<Image> rowImages = new();

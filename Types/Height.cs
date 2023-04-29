@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
+using d9.utl;
 
 namespace grp
 {
@@ -15,7 +16,7 @@ namespace grp
         /// <summary>
         /// Matches <c><em>x</em>'<em>y</em>"</c>, where <c><em>x</em></c> and <c><em>y</em></c> are numbers.
         /// </summary>
-        private static readonly Regex FeetAndInches = new(@$"\d+[{StringUtils.FancyApostrophes.JoinToString()}]\d+[{StringUtils.FancyQuotes.JoinToString()}]");
+        private static readonly Regex FeetAndInches = new(@$"\d+[{Constants.Apostrophes}]\d+[{Constants.Quotes}]");
         /// <summary>
         /// Matches <c><em>z</em>cm</c>, where <c><em>z</em></c> is a number.
         /// </summary>
@@ -27,7 +28,7 @@ namespace grp
         {
             new(FeetAndInches, delegate(string s)
             {
-                string[] split = s.Without(StringUtils.FancyQuotes).Split(StringUtils.FancyApostrophes);
+                string[] split = s.Without(Constants.Quotes).Split(Constants.Apostrophes);
                 int feet = int.Parse(split[0]);
                 int inches = int.Parse(split[1]);
                 return new(feet, inches);
@@ -85,7 +86,7 @@ namespace grp
         /// </summary>
         /// <remarks>Calculated by averaging the amab and afab heights given
         /// <see href="https://ourworldindata.org/human-height#how-does-human-height-vary-across-the-world">here</see>.</remarks>
-        public static readonly Height Default = new(MiscUtils.Mean(171, 159));
+        public static readonly Height Default = new(MathUtils.Mean(171, 159));
         public static readonly Height Minimum = new(2, 0);
         public static readonly Height Maximum = new(9, 0);
         /// <summary>
