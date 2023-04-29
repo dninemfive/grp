@@ -5,23 +5,12 @@ using System.Xml.Schema;
 using System.Windows;
 using System.Runtime.InteropServices;
 using d9.utl;
+using d9.utl.compat;
 
-#region load config
-string? configPath = null;
-if (args.Length > 1)
-{
-    string firstArg = args.First();
-    if (!File.Exists(firstArg))
-    {
-        Console.WriteLine($"Could not find config file at `{firstArg}`! Defaulting to `{Paths.DefaultConfigFile}`.");
-    }
-    else configPath = firstArg;
-}
-Config.Load(configPath ?? Paths.DefaultConfigFile);
-#endregion load config
 #region prepare database
 Paths.CreateFolders();
-if(Config.Current.GoogleAuth is not null && !Config.Current.SkipGoogleDownload) NetUtils.DownloadTsv(Config.Current.GoogleAuth.FileId, Paths.TsvFile);
+if(GoogleUtils.IsValid && !GrpConfig.Current.SkipGoogleDownload) 
+    GoogleUtils.Download(GrpConfig.GoogleFileId, Paths.TsvFile, "tsv".MimeType()!);
 List<string> rawTsv = File.ReadAllLines(Paths.TsvFile).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
 ColumnInfoSet columns = new(
     ("timestamp", 24, ColumnType.Key),
@@ -50,7 +39,7 @@ foreach (User user in latestUniqueUsers.OrderByDescending(x => x.ExcessAlpha)) C
 #region construct image
 // float medianExcessAlpha = latestUniqueUsers.Select(x => (float)x.ExcessAlpha).Median((x, y) => MiscUtils.Mean(x, y));
 long maxNormalExcessAlpha = 2137666; // determined by inspection
-int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)Config.Current.MaxUsersPerRow);
+int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)GrpConfig.Current.MaxUsersPerRow);
 IEnumerable<IEnumerable<User>> rows = latestUniqueUsers
                                         .OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - maxNormalExcessAlpha))
                                         .ThenByDescending(x => x.Height)
@@ -64,8 +53,8 @@ foreach(IEnumerable<User> row in rows)
     string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
     imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";    
 }
-if (Config.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
-if (Config.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
+if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
+if (GrpConfig.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
 using Image result = ImageUtils.Merge(new Image[]
 {
     Images.WatermarkToAdd,

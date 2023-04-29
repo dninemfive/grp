@@ -1,4 +1,5 @@
-﻿using System;
+﻿using d9.utl;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,16 +10,9 @@ using System.Threading.Tasks;
 #pragma warning disable CS8618
 namespace grp
 {
-    internal class Config
+    internal class GrpConfig
     {
-        public static Config Current;
-        public static void Load(string path)
-        {
-            Config? config = JsonSerializer.Deserialize<Config>(File.ReadAllText(path));
-            if (config is null) throw new Exception($"Could not find config file at path `{path}`!");
-            Current = config;
-            Console.WriteLine($"Loaded config from `{path}`.");
-        }
+        public static readonly GrpConfig Current = Config.TryLoad<GrpConfig>("config.json") ?? throw new Exception("Couldn't find a valid config file!");
         public class ConfigPaths
         {
             [JsonInclude]
@@ -57,31 +51,6 @@ namespace grp
         [JsonInclude]
         public int MaxUsersPerRow = 12;
         [JsonIgnore]
-        private GoogleAuthConfig? _googleAuth = null;
-        [JsonIgnore]
-        public GoogleAuthConfig? GoogleAuth
-        {
-            get
-            {
-                if (Paths.GoogleAuth is null) return null;
-                _googleAuth ??= JsonSerializer.Deserialize<GoogleAuthConfig>(File.ReadAllText(grp.Paths.GoogleConfig));
-                return _googleAuth;
-            }
-        }
-    }
-    public class GoogleAuthConfig
-    {
-        [JsonInclude]
-        public string Key;
-        [JsonInclude]
-        public string Email;
-        [JsonInclude]
-        public string FileId;
-        public GoogleAuthConfig(string key, string email, string fileId)
-        {
-            Key = key;
-            Email = email;
-            FileId = fileId;
-        }
-    }
+        public static string GoogleFileId = "";
+    }    
 }
