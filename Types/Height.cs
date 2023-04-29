@@ -28,7 +28,7 @@ namespace grp
         {
             new(FeetAndInches, delegate(string s)
             {
-                string[] split = s.Without(Constants.Quotes).Split(Constants.Apostrophes);
+                string[] split = s.Without(Constants.Quotes).Split(Constants.Apostrophes.ToArray());
                 int feet = int.Parse(split[0]);
                 int inches = int.Parse(split[1]);
                 return new(feet, inches);

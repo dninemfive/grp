@@ -2,7 +2,8 @@
   "profiles": {
     "grp": {
       "commandName": "Project",
-      "commandLineArgs": "C:\\Users\\dninemfive\\Documents\\workspaces\\misc\\grp"
+      "commandLineArgs": "--googleAuth \"google auth.json.secret\"",
+      "workingDirectory": "C:\\Users\\dninemfive\\Documents\\workspaces\\misc\\grp"
     }
   }
 }

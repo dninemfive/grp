@@ -51,6 +51,6 @@ namespace grp
         [JsonInclude]
         public int MaxUsersPerRow = 12;
         [JsonIgnore]
-        public static string GoogleFileId = "";
+        public static readonly string GoogleFileId = File.ReadAllText("file id.txt.secret");
     }    
 }
