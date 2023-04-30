@@ -111,5 +111,6 @@ namespace grp
         /// </summary>
         public string FileName => $"{DiscordId}{Path.GetExtension(Url)}";
         public long ExcessAlpha { get; private set; } = -1;
+        public override string ToString() => $"{Name} ({Timestamp:g}) ";
     }
 }

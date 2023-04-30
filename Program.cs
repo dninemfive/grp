@@ -31,10 +31,12 @@ foreach (TsvRow row in document.Rows)
 List<User> latestUniqueUsers = new();
 foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
 {
+    Console.WriteLine(users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).ListNotation());
+    Console.WriteLine($"\t{users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).First()}");
     latestUniqueUsers.Add(users.Where(x => x.DiscordId == discordid).OrderByDescending(x => x.Timestamp).First());
 }
 latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
-foreach (User user in latestUniqueUsers.OrderByDescending(x => x.Height)) Console.WriteLine($"{user.DiscordId,-32} {user.Height}");
+foreach (User user in latestUniqueUsers.OrderByDescending(x => x.Height)) Console.WriteLine(user);
 #endregion load users
 #region construct image
 // float medianExcessAlpha = latestUniqueUsers.Select(x => (float)x.ExcessAlpha).Median((x, y) => MiscUtils.Mean(x, y));

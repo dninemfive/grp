@@ -110,7 +110,7 @@ namespace grp
         {
             InCentimeters = centimeters;
         }
-        public override string ToString() => $"`{InCentimeters}cm`";
+        public override string ToString() => $"{InCentimeters}cm";
         /// <summary>
         /// Tries to parse a <see langword="string"/> into a <see cref="Height"/> via several methods, listed in <see cref="Parsers"/>.
         /// </summary>
