@@ -15,17 +15,6 @@ namespace grp
     {
         /// <summary>
         /// If a given path is relative rather than absolute, returns an absolute path corresponding to that path relative to the 
-        /// <see cref="Paths.BaseFolder">base folder</see>.
-        /// </summary>
-        /// <param name="path">A relative or absolute path.</param>
-        /// <returns>An absolute path corresponding to the <c>relativePath</c> located within the base folder.</returns>
-        public static string AbsoluteOrInBaseFolder(this string path) => Path.IsPathFullyQualified(path) switch
-        {
-            true => path,
-            false => Path.Join(Paths.BaseFolder, path)
-        };
-        /// <summary>
-        /// If a given path is relative rather than absolute, returns an absolute path corresponding to that path relative to the 
         /// <see cref="Paths.ImageFolder">default image folder</see>.
         /// </summary>
         /// <param name="path">A relative or absolute path.</param>
@@ -59,13 +48,5 @@ namespace grp
             using FileStream fs = File.Open(path.AbsoluteOrInImageFolder(), FileMode.Create);
             img.Save(fs, new SixLabors.ImageSharp.Formats.Png.PngEncoder());
         }
-        /// <summary>
-        /// Returns the folder the executable is in.
-        /// </summary>
-        /// <remarks>
-        /// Code from <see href="https://iq.direct/blog/51-how-to-get-the-current-executable-s-path-in-csharp.html">here</see>.
-        /// Uses the null-forgiving operator <c>!</c> because the current assembly's location Should™ always be a valid path.
-        /// </remarks>
-        public static string WorkingDirectory => Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location)!;
     }
 }
