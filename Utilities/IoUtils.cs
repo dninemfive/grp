@@ -15,18 +15,18 @@ namespace d9.grp
     {
         /// <summary>
         /// If a given path is relative rather than absolute, returns an absolute path corresponding to that path relative to the 
-        /// <see cref="Paths.ImageFolder">default image folder</see>.
+        /// <see cref="Paths.OutputFolder">default image folder</see>.
         /// </summary>
         /// <param name="path">A relative or absolute path.</param>
         /// <returns>An absolute path corresponding to the <c>relativePath</c> located within the default image folder.</returns>
         public static string AbsoluteOrInImageFolder(this string path) => Path.IsPathFullyQualified(path) switch
         {
             true => path,
-            false => Path.Join(Paths.ImageFolder, path)
+            false => Path.Join(Paths.OutputFolder, path)
         };
         /// <summary>
         /// Loads an image at the specified <c>path</c>. If the <c>path</c> is relative, looks for the image in the 
-        /// <see cref="Paths.ImageFolder">default image folder</see>.
+        /// <see cref="Paths.OutputFolder">default image folder</see>.
         /// </summary>
         /// <param name="path">A path to the desired image.</param>
         /// <returns>The image at <c>path</c>, if it exists.</returns>
@@ -38,7 +38,7 @@ namespace d9.grp
         }
         /// <summary>
         /// Saves an image to the specified <c>path</c>. If the <c>path</c> is relative, saves it in the 
-        /// <see cref="Paths.ImageFolder">default image folder</see>.
+        /// <see cref="Paths.OutputFolder">default image folder</see>.
         /// </summary>
         /// <remarks>If the file already exists, <b>it will be overwritten</b>.</remarks>
         /// <param name="img">The <see cref="Image"/> to save.</param>

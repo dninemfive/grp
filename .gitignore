@@ -4,7 +4,7 @@ debug/
 files/
 obj/
 *.csv
-images/
+output/
 *.tsv
 *.png
 *.secret

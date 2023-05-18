@@ -73,7 +73,7 @@ namespace d9.grp
             if (Image is null) return;
             if (Image.Width != 600 || Image.Height != 600)
             {
-                File.Delete(Path.Join(Paths.ImageFolder, FileName));
+                File.Delete(Path.Join(Paths.OutputFolder, FileName));
                 throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
             }
             ExcessAlpha = Image.MultiplyAlpha(Images.AlphaMask, SplitId.name).AlphaSum();

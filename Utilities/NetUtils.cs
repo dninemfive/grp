@@ -27,8 +27,7 @@ namespace d9.grp
         public static async Task<string?> Download(string url, string? fileName = null)
         {
             fileName ??= Path.GetFileName(url);
-            string targetPath = Path.Join(Paths.ImageFolder, fileName);
-            //Console.Write($"Downloading {url} to {targetPath}... ");
+            string targetPath = Path.Join(Paths.OutputFolder, fileName);
             Console.Write($"{fileName,-32}");
             try
             {

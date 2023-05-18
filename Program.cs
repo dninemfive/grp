@@ -12,9 +12,13 @@ public static class Program
     public static async Task Main()
     {
         Paths.CreateFolders();
-        if (GoogleUtils.HasValidAuthConfig && !GrpConfig.Current.SkipGoogleDownload)
-            GoogleUtils.Download(GrpConfig.GoogleFileId, Paths.TsvFile, "tsv".MimeType()!);
-        ConstructImage(await LoadUsersFrom(DocumentAt(Paths.TsvFile)));
+        foreach(GrpConfig.Group group in GrpConfig.Current.Groups)
+        {
+            string dataFilePath = group.Name.DataFile();
+            if (GoogleUtils.HasValidAuthConfig && !GrpConfig.Current.SkipGoogleDownload)
+                GoogleUtils.Download(group.GoogleFileId, dataFilePath, "tsv".MimeType()!);
+            ConstructImage(await LoadUsersFrom(DocumentAt(dataFilePath)), group.Name);
+        }
     }
     private static readonly ColumnInfoSet columns = new(
             ("timestamp", 24, ColumnType.Key),
@@ -56,7 +60,7 @@ public static class Program
                                 .ThenByDescending(x => x.Height)
                                 .BreakInto(rowCt);
     }
-    private static void ConstructImage(IEnumerable<IEnumerable<User>> rows)
+    private static void ConstructImage(IEnumerable<IEnumerable<User>> rows, string groupName)
     {
         List<Image> rowImages = new();
         int rowCt = rows.Count();
@@ -68,13 +72,13 @@ public static class Program
             string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
             imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
         }
-        if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
+        if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.OutputFolder, $"{groupName}.txt"), imageDescription);
         if (GrpConfig.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
         using Image result = ImageUtils.Merge(new Image[]
         {
             Images.WatermarkToAdd,
             rowImages.Merge(MergeDirection.TopBottom, 0.42f)
         }, MergeDirection.BottomTop, 0f);
-        result.SaveTo("result.png");
+        result.SaveTo("${groupName}.png");
     }
 }

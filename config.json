@@ -8,7 +8,6 @@
     "watermarkToAdd": "watermark_add.png",
     "googleAuth": "google auth.json.secret"
   },
-  "debug": false,
   "savePerUserImages": false,
   "copyDescToClipboard": true,
   "saveDescToFile": false,
