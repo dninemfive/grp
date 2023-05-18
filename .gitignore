@@ -8,3 +8,4 @@ output/
 *.tsv
 *.png
 *.secret
+config.json

@@ -43,12 +43,12 @@ namespace d9.grp
         /// <summary>
         /// The path to the image used to mask out the watermark from each picrew in order to properly join them together.
         /// </summary>
-        public static string WatermarkToSubtract(GrpConfig.Group group) => group.WatermarkToSubtract?.AbsolutePath() 
+        public static string WatermarkToSubtract(this GrpConfig.Group group) => group.WatermarkToSubtract?.AbsolutePath() 
                                                                         ?? GrpConfig.Current.Paths.WatermarkToSubtract.AbsolutePath();
         /// <summary>
         /// The path to the image which will be appended to credit the picrew author and the group for which the image was generated.
         /// </summary>
-        public static string WatermarkToAdd(GrpConfig.Group group) => group.WatermarkToAdd?.AbsolutePath()
+        public static string WatermarkToAdd(this GrpConfig.Group group) => group.WatermarkToAdd?.AbsolutePath()
                                                                    ?? GrpConfig.Current.Paths.WatermarkToAdd.AbsolutePath();
         public static string AlphaMask => "images/mask.png".AbsolutePath();
     }

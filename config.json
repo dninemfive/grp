@@ -1,15 +1,12 @@
 {
-  "paths": {
-    "baseFolder": "C:/Users/dninemfive/Documents/workspaces/misc/grp",
-    "imageFolder": "images",
-    "debugFolder": "debug",
-    "tsvFile": "data.tsv",
-    "watermarkToSubtract": "watermark_subtract.png",
-    "watermarkToAdd": "watermark_add.png",
-    "googleAuth": "google auth.json.secret"
-  },
+  "groups": [
+	{
+		"name": "Libcraft",
+		"googleFileId": "1jZbcDyJsgNC77Z_pMPNHTUaMb72A9SFNI_DG7VsLjhk"
+	}
+  ],
   "savePerUserImages": false,
-  "copyDescToClipboard": true,
-  "saveDescToFile": false,
+  "copyDescToClipboard": false,
+  "saveDescToFile": true,
   "maxUsersPerRow": 12
 }

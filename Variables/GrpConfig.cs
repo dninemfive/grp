@@ -16,31 +16,22 @@ namespace d9.grp
         public class ConfigPaths
         {
             [JsonInclude]
-            // set by jsonserializer
-#pragma warning disable CS0649
-            public string BaseFolder;
-#pragma warning restore CS0649
-            [JsonInclude]
             public string OutputFolder = "output";
-            [JsonInclude]
-            public string DebugFolder = "debug";
             [JsonInclude]
             public string DataFolder = "data";
             [JsonInclude]
-            public string WatermarkToSubtract = "images/watermark_subtract.png";
+            public string WatermarkToSubtract = "data/watermark_subtract.png";
             [JsonInclude]
-            public string WatermarkToAdd = "images/watermark_add.png";
+            public string WatermarkToAdd = "data/watermark_add.png";
             [JsonInclude]
-            public string Mask = "images/mask.png";
-            [JsonInclude]
-            public string? GoogleAuth = null;
+            public string Mask = "data/mask.png";
         }
         public class Group
         {
             [JsonInclude]
             public string Name;
             [JsonInclude]
-            public string GoogleFileId;
+            public string? GoogleFileId;
             [JsonInclude]
             public string? WatermarkToSubtract;
             [JsonInclude]
@@ -51,7 +42,7 @@ namespace d9.grp
         [JsonInclude]
         // set by jsonserializer
 #pragma warning disable CS0649
-        public ConfigPaths Paths;
+        public ConfigPaths Paths = new();
 #pragma warning restore CS0649
         [JsonInclude]
         public List<Group> Groups;

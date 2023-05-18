@@ -12,12 +12,13 @@ public static class Program
     public static async Task Main()
     {
         Paths.CreateFolders();
-        foreach(GrpConfig.Group group in GrpConfig.Current.Groups)
+        bool downloadFromDrive = GoogleUtils.HasValidAuthConfig && !GrpConfig.Current.SkipGoogleDownload;
+        foreach (GrpConfig.Group group in GrpConfig.Current.Groups)
         {
             string dataFilePath = group.Name.DataFile();
-            if (GoogleUtils.HasValidAuthConfig && !GrpConfig.Current.SkipGoogleDownload)
-                GoogleUtils.Download(group.GoogleFileId, dataFilePath, "tsv".MimeType()!);
-            ConstructImage(await LoadUsersFrom(DocumentAt(dataFilePath)), group.Name);
+            if (downloadFromDrive && !group.GoogleFileId.NullOrEmpty())
+                GoogleUtils.Download(group.GoogleFileId!, dataFilePath, "tsv".MimeType()!);
+            ConstructImage(await LoadUsersFrom(DocumentAt(dataFilePath), group.Name), group);
         }
     }
     private static readonly ColumnInfoSet columns = new(
@@ -36,12 +37,15 @@ public static class Program
     }
     // determined by inspection
     private const long maxNormalExcessAlpha = 2137666;
-    private static async Task<IEnumerable<IEnumerable<User>>> LoadUsersFrom(TsvDocument document)
+    private static async Task<IEnumerable<IEnumerable<User>>> LoadUsersFrom(TsvDocument document, string group)
     {
         List<User> users = new();
         foreach (TsvRow row in document.Rows)
         {
-            users.Add(await User.Parse(row));
+            User user = await User.Parse(row);
+            users.Add(user);
+            if (GrpConfig.Current.SavePerUserImages && user.Image is not null) 
+                user.Image.SaveTo(Path.Join(group.DebugFolder(), user.FileName));
         }
         List<User> latestUniqueUsers = new();
         foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
@@ -60,7 +64,7 @@ public static class Program
                                 .ThenByDescending(x => x.Height)
                                 .BreakInto(rowCt);
     }
-    private static void ConstructImage(IEnumerable<IEnumerable<User>> rows, string groupName)
+    private static void ConstructImage(IEnumerable<IEnumerable<User>> rows, GrpConfig.Group group)
     {
         List<Image> rowImages = new();
         int rowCt = rows.Count();
@@ -72,13 +76,13 @@ public static class Program
             string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
             imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
         }
-        if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.OutputFolder, $"{groupName}.txt"), imageDescription);
+        if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.OutputFolder, $"{group.Name}.txt"), imageDescription);
         if (GrpConfig.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
         using Image result = ImageUtils.Merge(new Image[]
         {
-            Images.WatermarkToAdd,
+            Images.WatermarkToAdd(group),
             rowImages.Merge(MergeDirection.TopBottom, 0.42f)
         }, MergeDirection.BottomTop, 0f);
-        result.SaveTo("${groupName}.png");
+        result.SaveTo($"{group.Name}.png");
     }
 }

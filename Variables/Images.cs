@@ -15,11 +15,11 @@ namespace d9.grp
         /// <summary>
         /// The watermark to add so that the picrew author and the group for whom the image is made are both credited.
         /// </summary>
-        public static readonly Image WatermarkToAdd = Paths.WatermarkToAdd.LoadImage();
+        public static Image WatermarkToAdd(GrpConfig.Group group) => group.WatermarkToAdd().LoadImage();
         /// <summary>
         /// The image which will be used to mask out the watermarks.
         /// </summary>
-        public static readonly Image<Rgba32> WatermarkForSubtraction = Paths.WatermarkToSubtract.LoadImage().CloneAs<Rgba32>();
+        public static Image<Rgba32> WatermarkForSubtraction(GrpConfig.Group group) => group.WatermarkToSubtract().LoadImage().CloneAs<Rgba32>();
         public static readonly Image AlphaMask = Paths.AlphaMask.LoadImage();
         /// <summary>
         /// The actual pixel coordinates which will be masked out to remove the watermark.
