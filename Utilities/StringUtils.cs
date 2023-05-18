@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using d9.utl;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Utilities related to printing various values to the console.

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Descriptor for a given column in a <see cref="TsvDocument"/>, comparable to a field on an object in a list.

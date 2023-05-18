@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Collects a set of <see cref="ColumnInfo"/>s into a valid descriptor for a <see cref="TsvDocument"/>, performing basic checks in a centralized place.

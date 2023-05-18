@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Useful paths for this program.

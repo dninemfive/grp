@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using d9.utl;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Parses a string of in the format <c><em>x</em>'<em>y</em>"</c> or <c><em>z</em>cm</c> into a height in centimeters.

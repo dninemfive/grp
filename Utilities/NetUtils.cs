@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.Json;
 
-namespace grp
+namespace d9.grp
 {
     public static class NetUtils
     {

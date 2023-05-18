@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Represents a single row in a <see cref="TsvDocument"/>.

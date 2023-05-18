@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 #pragma warning disable CS8618
-namespace grp
+namespace d9.grp
 {
     internal class GrpConfig
     {

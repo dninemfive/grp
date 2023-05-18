@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// The type a column of a CSV table has.

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Utilities related to processing <see href="https://docs.sixlabors.com/articles/imagesharp/index.html">ImageSharp</see> <see cref="Image"/>s.

@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace grp
+namespace d9.grp
 {
     /// <summary>
     /// Represents a user constructed from a <see cref="TsvRow">row</see> of a <see cref="TsvDocument"/>.
