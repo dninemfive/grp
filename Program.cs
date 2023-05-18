@@ -9,7 +9,7 @@ using d9.utl.compat;
 namespace d9.grp;
 public static class Program
 {
-    public static async void Main()
+    public static async Task Main()
     {
         Paths.CreateFolders();
         if (GoogleUtils.HasValidAuthConfig && !GrpConfig.Current.SkipGoogleDownload)

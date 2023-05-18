@@ -1,16 +1,16 @@
 {
-  "Paths": {
-    "BaseFolder": "C:/Users/dninemfive/Documents/workspaces/misc/grp",
-    "ImageFolder": "images",
-    "DebugFolder": "debug",
-    "TsvFile": "data.tsv",
-    "WatermarkToSubtract": "watermark_subtract.png",
-    "WatermarkToAdd": "watermark_add.png",
-    "GoogleAuth": "google auth.json.secret"
+  "paths": {
+    "baseFolder": "C:/Users/dninemfive/Documents/workspaces/misc/grp",
+    "imageFolder": "images",
+    "debugFolder": "debug",
+    "tsvFile": "data.tsv",
+    "watermarkToSubtract": "watermark_subtract.png",
+    "watermarkToAdd": "watermark_add.png",
+    "googleAuth": "google auth.json.secret"
   },
-  "Debug": false,
-  "SavePerUserImages": false,
-  "CopyDescToClipboard": true,
-  "SaveDescToFile": false,
-  "MaxUsersPerRow": 12
+  "debug": false,
+  "savePerUserImages": false,
+  "copyDescToClipboard": true,
+  "saveDescToFile": false,
+  "maxUsersPerRow": 12
 }
