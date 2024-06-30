@@ -1,10 +1,11 @@
+*.csv
+*.png
+*.tsv
+*.secret
 .vs/
 bin/
+obj/
 debug/
 files/
-obj/
-*.csv
 images/
-*.tsv
-*.png
-*.secret
+output/
