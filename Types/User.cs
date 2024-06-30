@@ -77,7 +77,7 @@ namespace d9.grp
                 throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
             }
             ExcessAlpha = Image.MultiplyAlpha(Images.AlphaMask, SplitId.name).AlphaSum();
-            Image = Image.Mask(Images.WatermarkMask);            
+            Image = Image.Mask(Images.DefaultWatermarkMask);            
             Image.Mutate((context) => context.Resize(new ResizeOptions()
             {
                 Mode = ResizeMode.Stretch,

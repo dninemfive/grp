@@ -44,7 +44,8 @@ namespace d9.grp
         /// The path to the image used to mask out the watermark from each picrew in order to properly join them together.
         /// </summary>
         public static string WatermarkToSubtract(this GrpConfig.Group group) => group.WatermarkToSubtract?.AbsolutePath() 
-                                                                        ?? GrpConfig.Current.Paths.WatermarkToSubtract.AbsolutePath();
+                                                                        ?? DefaultWatermarkToSubtract;
+        public static readonly string DefaultWatermarkToSubtract = GrpConfig.Current.Paths.WatermarkToSubtract.AbsolutePath();
         /// <summary>
         /// The path to the image which will be appended to credit the picrew author and the group for which the image was generated.
         /// </summary>

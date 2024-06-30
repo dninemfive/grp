@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,20 +21,21 @@ namespace d9.grp
         /// The image which will be used to mask out the watermarks.
         /// </summary>
         public static Image<Rgba32> WatermarkForSubtraction(GrpConfig.Group group) => group.WatermarkToSubtract().LoadImage().CloneAs<Rgba32>();
+        public static readonly Image<Rgba32> DefaultWatermarkForSubtraction = Paths.DefaultWatermarkToSubtract.LoadImage().CloneAs<Rgba32>();
         public static readonly Image AlphaMask = Paths.AlphaMask.LoadImage();
         /// <summary>
         /// The actual pixel coordinates which will be masked out to remove the watermark.
         /// </summary>
         private static HashSet<(int x, int y)>? _watermarkMask = null;
         /// <inheritdoc cref="_watermarkMask"/>
-        public static ImmutableHashSet<(int x, int y)> WatermarkMask
+        public static ImmutableHashSet<(int x, int y)> DefaultWatermarkMask
         {
             get
             {
                 if (_watermarkMask is null)
                 {
                     _watermarkMask = new();
-                    using Image<Rgba32> watermarkMask = WatermarkForSubtraction.CloneAs<Rgba32>();
+                    using Image<Rgba32> watermarkMask = DefaultWatermarkForSubtraction.CloneAs<Rgba32>();
                     Rgba32 transparent = Color.Transparent;
                     watermarkMask.ProcessPixelRows(accessor =>
                     {
@@ -49,6 +51,15 @@ namespace d9.grp
                 }
                 return _watermarkMask.ToImmutableHashSet();
             }
+        }
+        private static readonly Dictionary<string, ImmutableHashSet<(int x, int y)>> _watermarkMasks = new();
+        public static ImmutableHashSet<(int x, int y)> WatermarkMaskFor(GrpConfig.Group group)
+        {
+            if (group.WatermarkToSubtract is null) return DefaultWatermarkMask;
+            if(!_watermarkMasks.ContainsKey(group.Name))
+            {
+
+            } 
         }
     }    
 }
