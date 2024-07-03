@@ -21,8 +21,8 @@ public static class NetUtils
     /// </summary>
     /// <param name="url">The URL of the file to download.</param>
     /// <param name="fileName">
-    /// The name the file should have when downloaded. If not specified, defaults to the name of
-    /// the file specified in the <c>url</c>.
+    /// The name the file should have when downloaded. If not specified, defaults to the name of the
+    /// file specified in the <c>url</c>.
     /// </param>
     /// <returns>
     /// The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.

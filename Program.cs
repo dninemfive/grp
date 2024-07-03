@@ -1,9 +1,4 @@
-﻿using System.Net.Http;
-using System.Text.Json;
-using System.Xml.Schema;
-using System.Windows;
-using System.Runtime.InteropServices;
-using d9.utl;
+﻿using d9.utl;
 using d9.utl.compat;
 
 namespace d9.grp;
@@ -16,7 +11,7 @@ public static class Program
             GoogleUtils.Download(GrpConfig.GoogleFileId, Paths.TsvFile, "tsv".MimeType()!);
         ConstructImage(await LoadUsersFrom(DocumentAt(Paths.TsvFile)));
     }
-    private static readonly ColumnInfoSet columns = new(
+    private static readonly ColumnInfoSet _columns = new(
             ("timestamp", 24, ColumnType.Key),
             ("discord id", 42),
             ("display name", 32, ColumnType.Nullable),
@@ -26,12 +21,13 @@ public static class Program
     private static TsvDocument DocumentAt(string path)
     {
         List<string> rawTsv = File.ReadAllLines(path).Skip(1).Where(x => !string.IsNullOrEmpty(x?.Trim())).ToList();
-        TsvDocument document = new(columns, rawTsv);
-        foreach (string s in document.Readable) Console.WriteLine(s);
+        TsvDocument document = new(_columns, rawTsv);
+        foreach (string s in document.Readable)
+            Console.WriteLine(s);
         return document;
     }
     // determined by inspection
-    private const long maxNormalExcessAlpha = 2137666;
+    private const long _maxNormalAlpha = 2137666;
     private static async Task<IEnumerable<IEnumerable<User>>> LoadUsersFrom(TsvDocument document)
     {
         List<User> users = new();
@@ -52,9 +48,9 @@ public static class Program
             Console.WriteLine(user);
         }
         int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)GrpConfig.Current.MaxUsersPerRow);
-        return latestUniqueUsers.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - maxNormalExcessAlpha))
+        return latestUniqueUsers.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - _maxNormalAlpha))
                                 .ThenByDescending(x => x.Height)
-                                .BreakInto(rowCt);
+                                .Chunk(rowCt);
     }
     private static void ConstructImage(IEnumerable<IEnumerable<User>> rows)
     {
@@ -68,8 +64,10 @@ public static class Program
             string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
             imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
         }
-        if (GrpConfig.Current.SaveDescToFile) File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
-        if (GrpConfig.Current.CopyDescToClipboard) TextCopy.ClipboardService.SetText(imageDescription);
+        if (GrpConfig.Current.SaveDescToFile)
+            File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
+        if (GrpConfig.Current.CopyDescToClipboard)
+            TextCopy.ClipboardService.SetText(imageDescription);
         using Image result = ImageUtils.Merge(new Image[]
         {
             Images.WatermarkToAdd,

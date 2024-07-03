@@ -19,20 +19,20 @@ public record ColumnInfoSet : IEnumerable<ColumnInfo>
     private readonly Dictionary<string, ColumnInfo> _columnInfos = new();
     /// <summary>
     /// Assembles a <c>ColumnInfoSet</c> from an arbitrary number of specified <see
-    /// cref="ColumnInfo"/> s. Throws an <see cref="Exception"/> with some information if the
-    /// column descriptors conflict, i.e.:
+    /// cref="ColumnInfo"/> s. Throws an <see cref="Exception"/> with some information if the column
+    /// descriptors conflict, i.e.:
     /// <list type="bullet">
     /// <item>There are 0 or multiple <see cref="ColumnType.Key">Key</see> columns, or</item>
     /// <item>There are multiple columns with the same <see cref="ColumnInfo.Name">Name</see>.</item>
     /// </list>
     /// </summary>
     /// <param name="columnInfos">
-    /// The <see cref="ColumnInfo"/> s from which to construct the set. Because of the
-    /// <c>params</c> keyword, this does not need to be an explicitly constructed array.
+    /// The <see cref="ColumnInfo"/> s from which to construct the set. Because of the <c>params</c>
+    /// keyword, this does not need to be an explicitly constructed array.
     /// </param>
     /// <remarks>
-    /// See the implicit conversion operators in <see cref="ColumnInfo"/>, which may make
-    /// defining these more readable.
+    /// See the implicit conversion operators in <see cref="ColumnInfo"/>, which may make defining
+    /// these more readable.
     /// </remarks>
     /// <exception cref="Exception">Whatever i write here doesn't seem to show up, unfortunately.</exception>
     public ColumnInfoSet(params ColumnInfo[] columnInfos)
@@ -97,9 +97,9 @@ public record ColumnInfoSet : IEnumerable<ColumnInfo>
     /// <inheritdoc cref="GetEnumerator"/>
     IEnumerator IEnumerable.GetEnumerator() => InOrder.GetEnumerator();
     /// <summary>
-    /// The columns of this set as shown when displaying a table using it, and their widths to
-    /// use in that scenario. The <see cref="ColumnType.Key">Key</see> column has `🔑`
-    /// prepended, and <see cref="ColumnType.Nullable">Nullable</see> columns have `❓` appended.
+    /// The columns of this set as shown when displaying a table using it, and their widths to use
+    /// in that scenario. The <see cref="ColumnType.Key">Key</see> column has `🔑` prepended, and
+    /// <see cref="ColumnType.Nullable">Nullable</see> columns have `❓` appended.
     /// </summary>
     public IEnumerable<(string column, int width)> Header
     {

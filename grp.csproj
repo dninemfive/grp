@@ -20,4 +20,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="SixLabors.ImageSharp" />
+    <Using Include="SixLabors.ImageSharp.PixelFormats" />
+  </ItemGroup>
+
 </Project>

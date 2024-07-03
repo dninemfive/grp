@@ -8,8 +8,8 @@ namespace d9.grp;
 public static class Images
 {
     /// <summary>
-    /// The watermark to add so that the picrew author and the group for whom the image is made
-    /// are both credited.
+    /// The watermark to add so that the picrew author and the group for whom the image is made are
+    /// both credited.
     /// </summary>
     public static readonly Image WatermarkToAdd = Paths.WatermarkToAdd.LoadImage();
     /// <summary>

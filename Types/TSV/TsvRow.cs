@@ -10,7 +10,7 @@ public class TsvRow
     /// <summary>
     /// Holds the value of each column indexed by the column's name.
     /// </summary>
-    private readonly Dictionary<string, string?> columnValues = new();
+    private readonly Dictionary<string, string?> _columnValues = new();
     /// <summary>
     /// The name of this row's <see cref="ColumnType.Key">Key</see> column.
     /// </summary>
@@ -24,17 +24,15 @@ public class TsvRow
     /// </summary>
     public ColumnInfoSet Columns { get; }
     /// <summary>
-    /// Creates a new <c>TsvRow</c> with the specified columns and values. Ensures that each
-    /// column meets the requirements of its <see cref="ColumnType"/>,
+    /// Creates a new <c>TsvRow</c> with the specified columns and values. Ensures that each column
+    /// meets the requirements of its <see cref="ColumnType"/>,
     /// namely: <br/><inheritdoc cref="ColumnType" path="/summary/list"/>
     /// </summary>
     /// <param name="columns"><inheritdoc cref="Columns" path="/summary"/></param>
     /// <param name="entries">
     /// A set of pairs of column names and the values those respective columns should have.
     /// </param>
-    /// <exception cref="Exception">
-    /// Thrown if the columns do not meet the above-specified requirements.
-    /// </exception>
+    /// <exception cref="Exception">Thrown if the columns do not meet the above-specified requirements.</exception>
     public TsvRow(ColumnInfoSet columns, params (string k, string v)[] entries)
     {
         IEnumerable<string> nonNullableColumnNames = columns.Where(x => !x.MayBeNull).Select(x => x.Name);
@@ -53,20 +51,20 @@ public class TsvRow
             // v cannot be null if IsKey() because an exception is thrown above if so
             if (columns.IsKey(k))
                 Key = v!;
-            columnValues[k] = v;
+            _columnValues[k] = v;
         }
         Columns = columns;
     }
     /// <summary>
-    /// Creates a new <c>TsvRow</c> from an unparsed tab-separated string with values in the
-    /// same order as the columns.
+    /// Creates a new <c>TsvRow</c> from an unparsed tab-separated string with values in the same
+    /// order as the columns.
     /// </summary>
     /// <param name="columns"><inheritdoc cref="Columns" path="/summary"/></param>
     /// <param name="unparsed">An unparsed string containing a TSV-format row.</param>
     public TsvRow(ColumnInfoSet columns, string unparsed) : this(columns, columns.Names.Zip(unparsed.Split('\t')).ToArray()) { }
     /// <param name="key">The name of the column whose value to get.</param>
     /// <returns>The value of the column named by the key.</returns>
-    public string? this[string key] => columnValues[key];
+    public string? this[string key] => _columnValues[key];
     /// <summary>
     /// Gets the values of the specified columns in the order they are specified.
     /// </summary>

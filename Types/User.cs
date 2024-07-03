@@ -1,4 +1,5 @@
 ﻿using d9.utl;
+using SixLabors.ImageSharp.Processing;
 using System.Globalization;
 
 namespace d9.grp;
@@ -41,8 +42,8 @@ internal class User
     /// Constructs a user from a <see cref="TsvRow">row</see>.
     /// </summary>
     /// <remarks>
-    /// In order to successfully construct a user, the row must have the following columns, in
-    /// the following order:
+    /// In order to successfully construct a user, the row must have the following columns, in the
+    /// following order:
     /// <list type="number">
     /// <item><c>timestamp</c> (key)</item>
     /// <item><c>discord id</c></item>
@@ -97,8 +98,8 @@ internal class User
     /// <inheritdoc cref="User(TsvRow)" path="/summary"/>
     /// </summary>
     /// <remarks>
-    /// <inheritdoc cref="User(TsvRow)" path="/remarks"/><br/><br/> Exists because downloading
-    /// the image must be <see langword="async"/>, and normal constructors can't support that.
+    /// <inheritdoc cref="User(TsvRow)" path="/remarks"/><br/><br/> Exists because downloading the
+    /// image must be <see langword="async"/>, and normal constructors can't support that.
     /// </remarks>
     /// <param name="row"><inheritdoc cref="User(TsvRow)" path="/param[@name='row']"/></param>
     /// <returns>The <see cref="User"/> parsed from the given <see cref="TsvRow"/>.</returns>

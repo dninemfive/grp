@@ -1,4 +1,7 @@
 ﻿using d9.utl;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace d9.grp;
 
@@ -17,30 +20,30 @@ public static class ImageUtils
     /// Which <see cref="MergeDirection">direction</see> to merge the images in:
     /// <list type="bullet">
     /// <item>
-    /// <see cref="MergeDirection.LeftRight"/> places the leftmost image first, and therefore
-    /// images will overlay those to their left;
+    /// <see cref="MergeDirection.LeftRight"/> places the leftmost image first, and therefore images
+    /// will overlay those to their left;
     /// </item>
     /// <item>
     /// <see cref="MergeDirection.RightLeft"/> places the rightmost image first, and therefore
     /// images will overlay those to their right;
     /// </item>
     /// <item>
-    /// <see cref="MergeDirection.TopBottom"/> places the topmost image first, and therefore
-    /// images will overlay those above them vertically;
+    /// <see cref="MergeDirection.TopBottom"/> places the topmost image first, and therefore images
+    /// will overlay those above them vertically;
     /// </item>
     /// <item>
     /// <see cref="MergeDirection.RightLeft"/> places the bottommost image first, and therefore
     /// images will overlay those below them vertically.
     /// </item>
     /// </list>
-    /// Note that the images will be in the same order, this merely determines which images
-    /// overlay which others.
+    /// Note that the images will be in the same order, this merely determines which images overlay
+    /// which others.
     /// </param>
     /// <param name="overlap">
-    /// How much images should overlap. The default value, <c>0.25</c>, indicates that each
-    /// image will overlay 25% of the image previous. <br/> A value of <c>0</c> means no
-    /// overlap, and a value of <c>1</c> means complete overlap. Values below 0 or above 1 are
-    /// undefined but the former should work, increasing image spacing.
+    /// How much images should overlap. The default value, <c>0.25</c>, indicates that each image
+    /// will overlay 25% of the image previous. <br/> A value of <c>0</c> means no overlap, and a
+    /// value of <c>1</c> means complete overlap. Values below 0 or above 1 are undefined but the
+    /// former should work, increasing image spacing.
     /// </param>
     /// <returns>
     /// An <see cref="Image"/> consisting of the specified <c>images</c> overlaid as described above.
@@ -50,8 +53,8 @@ public static class ImageUtils
         if (images.Count() == 1)
             return images.First();
         Image result = GenerateImageWhichFits(images.Select(x => x.Width), images.Select(x => x.Height), direction, overlap);
-        // edgeDimension is used for figuring out the left or top edge alignDimension is used
-        // for aligning the image
+        // edgeDimension is used for figuring out the left or top edge alignDimension is used for
+        // aligning the image
         Func<Image, int> edgeDimension = direction.IsHorizontal() ? (x) => x.Width : (x) => x.Height,
                          alignDimension = direction.IsHorizontal() ? (x) => x.Height : (x) => x.Width;
         int currentTopOrLeftEdge = direction.IsReverse() ? edgeDimension(result) : 0;
@@ -68,8 +71,8 @@ public static class ImageUtils
         return result.Autocrop();
     }
     /// <summary>
-    /// Generates an image which fits a merged image; i.e. it sums the dimension in which the
-    /// images will be overlaid, and takes the maximum of the other dimension.
+    /// Generates an image which fits a merged image; i.e. it sums the dimension in which the images
+    /// will be overlaid, and takes the maximum of the other dimension.
     /// </summary>
     /// <param name="widths">
     /// The <see cref="Image.Width">width</see> s of the images which will be merged.
@@ -107,14 +110,14 @@ public static class ImageUtils
     /// </returns>
     public static bool IsHorizontal(this MergeDirection md) => md is MergeDirection.LeftRight or MergeDirection.RightLeft;
     /// <summary>
-    /// Whether or not a <see cref="MergeDirection"/> is processed in reverse relative to the
-    /// normal <see cref="Image"/> coordinates.
+    /// Whether or not a <see cref="MergeDirection"/> is processed in reverse relative to the normal
+    /// <see cref="Image"/> coordinates.
     /// </summary>
     /// <remarks>
-    /// For example, moving left to right within image coordinates starts at 0 and counts up to
-    /// the image's width; this is defined as "normal" (or more precisely non-reverse) behavior.
-    /// Conversely, moving right to left starts at the image's width and ends at 0, so this is
-    /// the "reverse" of "normal."
+    /// For example, moving left to right within image coordinates starts at 0 and counts up to the
+    /// image's width; this is defined as "normal" (or more precisely non-reverse) behavior.
+    /// Conversely, moving right to left starts at the image's width and ends at 0, so this is the
+    /// "reverse" of "normal."
     /// </remarks>
     /// <param name="md">The <see cref="MergeDirection"/> whose reverse status to check.</param>
     /// <returns>
@@ -129,16 +132,14 @@ public static class ImageUtils
     /// The width or height, depending on the merge direction, of the canvas being used to merge images.
     /// </param>
     /// <param name="imgDim">
-    /// The width or height, depending on the merge direction, of the image being painted onto
-    /// the canvas.
+    /// The width or height, depending on the merge direction, of the image being painted onto the canvas.
     /// </param>
     /// <param name="currentEdge">The current left or top edge, depending on the merge direction.</param>
     /// <param name="md">The direction of the merge.</param>
     /// <returns>
     /// If the merge direction <see cref="IsHorizontal">is horizontal</see>, a point which would
-    /// place the image along the specified left hand side and aligned to the bottom of the
-    /// canvas; otherwise, a point which would place it along the specified top edge and center
-    /// it horizontally.
+    /// place the image along the specified left hand side and aligned to the bottom of the canvas;
+    /// otherwise, a point which would place it along the specified top edge and center it horizontally.
     /// </returns>
     private static Point GetEdgePoint(int resultDim, int imgDim, int currentEdge, MergeDirection md) => md.IsHorizontal() switch
     {
@@ -146,8 +147,8 @@ public static class ImageUtils
         false => new((resultDim - imgDim) / 2, currentEdge)
     };
     /// <summary>
-    /// Makes <see cref="Rgba32"/> pixels at specified points in an <see cref="Image"/>
-    /// transparent, without modifying the original.
+    /// Makes <see cref="Rgba32"/> pixels at specified points in an <see cref="Image"/> transparent,
+    /// without modifying the original.
     /// </summary>
     /// <param name="image">The image whose pixels will be made transparent.</param>
     /// <param name="points">The coordinates of the pixels to be made transparent.</param>
@@ -163,14 +164,13 @@ public static class ImageUtils
         return rgbImage;
     }
     /// <summary>
-    /// Crops any transparency on the outside of an image, leaving only the minimal region
-    /// required to contain the non-transparent pixels, without modifying the original.
+    /// Crops any transparency on the outside of an image, leaving only the minimal region required
+    /// to contain the non-transparent pixels, without modifying the original.
     /// </summary>
     /// <param name="image">The image to crop.</param>
     /// <param name="type">
-    /// Whether to crop only the <see cref="AutocropType.Horizontal">left and right</see> parts
-    /// of the image, the <see cref="AutocropType.Vertical">top and bottom</see> thereof, or
-    /// <see cref="AutocropType.Both">both</see>.
+    /// Whether to crop only the <see cref="AutocropType.Horizontal">left and right</see> parts of
+    /// the image, the <see cref="AutocropType.Vertical">top and bottom</see> thereof, or <see cref="AutocropType.Both">both</see>.
     /// </param>
     /// <returns>The original <c>image</c>, autocropped as described above.</returns>
     public static Image Autocrop(this Image image, AutocropType type = AutocropType.Both)
@@ -231,8 +231,8 @@ public static class ImageUtils
     /// </summary>
     /// <param name="pixel">The pixel to check for full transparency.</param>
     /// <returns>
-    /// <see langword="true"/> if the pixel is fully transparent, i.e. has an opacity of 0, or
-    /// <see langword="false"/> otherwise.
+    /// <see langword="true"/> if the pixel is fully transparent, i.e. has an opacity of 0, or <see
+    /// langword="false"/> otherwise.
     /// </returns>
     public static bool IsEmpty(this Rgba32 pixel) => pixel.A == 0;
     public static long AlphaSum(this Image image)

@@ -22,18 +22,18 @@ internal class TsvDocument
     /// <summary>
     /// Stores the rows of this table.
     /// </summary>
-    private readonly Dictionary<string, TsvRow> Data = new();
+    private readonly Dictionary<string, TsvRow> _data = new();
     /// <summary>
     /// The rows in this table.
     /// </summary>
-    public IEnumerable<TsvRow> Rows => Data.Values.OrderBy(x => x.Key);
+    public IEnumerable<TsvRow> Rows => _data.Values.OrderBy(x => x.Key);
     /// <summary>
     /// Creates a <c>TsvDocument</c> with the specified columns and unparsed data.
     /// </summary>
     /// <param name="columns">The <see cref="ColumnInfoSet"/> describing this document's columns.</param>
     /// <param name="data">
-    /// A set of unparsed strings to be converted into <see cref="TsvRow"/> s in this table. If
-    /// not specified, the table will be empty at first.
+    /// A set of unparsed strings to be converted into <see cref="TsvRow"/> s in this table. If not
+    /// specified, the table will be empty at first.
     /// </param>
     public TsvDocument(ColumnInfoSet columns, IEnumerable<string>? data = null)
     {
@@ -46,11 +46,9 @@ internal class TsvDocument
     /// Gets the <see cref="TsvRow"/> in this table with the specified value in its <see
     /// cref="ColumnType.Key">Key</see> column, if any such row exists.
     /// </summary>
-    /// <param name="key">
-    /// The value this row has in the <see cref="ColumnType.Key">Key</see> column.
-    /// </param>
+    /// <param name="key">The value this row has in the <see cref="ColumnType.Key">Key</see> column.</param>
     /// <returns></returns>
-    public TsvRow this[string key] => Data[key];
+    public TsvRow this[string key] => _data[key];
     /// <summary>
     /// Adds a row to this table, if its columns match.
     /// </summary>
@@ -63,7 +61,7 @@ internal class TsvDocument
     {
         if (row.Columns != Columns)
             throw new Exception($"Row {row}'s columns do not match table {this}'s!");
-        Data[row.Key] = row;
+        _data[row.Key] = row;
     }
     /// <summary>
     /// Adds several rows to this table, if their columns match.
@@ -99,7 +97,7 @@ internal class TsvDocument
         {
             yield return Columns.Header.InColumns();
             yield return Columns.Header.Select(x => ('='.Repeated(x.column.Length), x.width)).InColumns();
-            foreach (TsvRow line in Data.OrderBy(x => x.Key).Select(x => x.Value))
+            foreach (TsvRow line in _data.OrderBy(x => x.Key).Select(x => x.Value))
                 yield return line[ColumnNames].InColumns(ColumnWidths);
         }
     }

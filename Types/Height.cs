@@ -4,25 +4,24 @@ using System.Text.RegularExpressions;
 namespace d9.grp;
 
 /// <summary>
-/// Parses a string of in the format <c><em>x</em>' <em>y</em>"</c> or <c><em>z</em> cm</c> into
-/// a height in centimeters.
+/// Parses a string of in the format <c><em>x</em>' <em>y</em>"</c> or <c><em>z</em> cm</c> into a
+/// height in centimeters.
 /// </summary>
-public class Height : IComparable
+public partial class Height : IComparable
 {
     /// <summary>
-    /// Matches <c><em>x</em>' <em>y</em>"</c>, where <c><em>x</em></c> and <c><em>y</em></c>
-    /// are numbers.
+    /// Matches <c><em>x</em>' <em>y</em>"</c>, where <c><em>x</em></c> and <c><em>y</em></c> are numbers.
     /// </summary>
-    private static readonly Regex FeetAndInches = new(@$"\d+[{Constants.Apostrophes}]\d+[{Constants.Quotes}]");
+    public static readonly Regex FeetAndInches = new(@$"\d+[{Constants.Apostrophes}]\d+[{Constants.Quotes}]");
     /// <summary>
     /// Matches <c><em>z</em> cm</c>, where <c><em>z</em></c> is a number.
     /// </summary>
-    private static readonly Regex Centimeters = new(@"\d+cm");
+    public static readonly Regex Centimeters = GenerateCentimeterRegex();
     /// <summary>
-    /// A list of <see cref="Parser"/> s which will be evaluated by <see cref="Parse(string)"/>
-    /// in sequence to try and construct a height from a string.
+    /// A list of <see cref="Parser"/> s which will be evaluated by <see cref="Parse(string)"/> in
+    /// sequence to try and construct a height from a string.
     /// </summary>
-    private static readonly List<Parser> Parsers = new()
+    private static readonly List<Parser> _parsers = new()
     {
         new(FeetAndInches, delegate(string s)
         {
@@ -58,8 +57,8 @@ public class Height : IComparable
             Parse = parser;
         }
         /// <summary>
-        /// Compares a string to the <see cref="Regex">Regex</see> and, if the regex applies,
-        /// sets <c>result</c> to the <see cref="Height"/> which results when <see
+        /// Compares a string to the <see cref="Regex">Regex</see> and, if the regex applies, sets
+        /// <c>result</c> to the <see cref="Height"/> which results when <see
         /// cref="Parse">Parse</see> d.
         /// </summary>
         /// <param name="s">The <see langword="string"/> to try to parse.</param>
@@ -68,8 +67,7 @@ public class Height : IComparable
         /// langword="null"/> otherwise.
         /// </param>
         /// <returns>
-        /// <see langword="true"/> if the parse attempt was successful, or <see
-        /// langword="false"/> otherwise.
+        /// <see langword="true"/> if the parse attempt was successful, or <see langword="false"/> otherwise.
         /// </returns>
         public bool TryParse(string s, out Height? result)
         {
@@ -103,10 +101,10 @@ public class Height : IComparable
     /// The ratio of this height to the <see cref="Default">Default</see>, used to scale images.
     /// </summary>
     public float Ratio => InCentimeters / Default.InCentimeters;
-    /// <summary></summary> <remarks>The values are not actually bounded, so they don't
-    /// technically need to meet the normal requirement that `inches` < 12, for
-    /// example.</remarks> <param name="feet">How many feet tall the height is.</param> <param
-    /// name="inches">The remaining height in inches.</param>
+    /// <summary></summary> <remarks>The values are not actually bounded, so they don't technically
+    /// need to meet the normal requirement that `inches` < 12, for example.</remarks> <param
+    /// name="feet">How many feet tall the height is.</param> <param name="inches">The remaining
+    /// height in inches.</param>
     public Height(int feet, int inches)
     {
         int totalInches = feet * 12 + inches;
@@ -118,17 +116,17 @@ public class Height : IComparable
     }
     public override string ToString() => $"{InCentimeters}cm";
     /// <summary>
-    /// Tries to parse a <see langword="string"/> into a <see cref="Height"/> via several
-    /// methods, listed in <see cref="Parsers"/>.
+    /// Tries to parse a <see langword="string"/> into a <see cref="Height"/> via several methods,
+    /// listed in <see cref="_parsers"/>.
     /// </summary>
     /// <param name="s">The <see langword="string"/> to try to parse.</param>
     /// <returns>
-    /// A successfully parsed <see cref="Height"/>, or <see cref="Default"/> if no parse
-    /// attempts were successful.
+    /// A successfully parsed <see cref="Height"/>, or <see cref="Default"/> if no parse attempts
+    /// were successful.
     /// </returns>
     public static Height Parse(string s)
     {
-        foreach (Parser parser in Parsers)
+        foreach (Parser parser in _parsers)
             if (parser.TryParse(s, out Height? result) && result is not null)
                 return result;
         Console.WriteLine($"Failed to parse {s} using any of the existing parsers.");
@@ -143,8 +141,7 @@ public class Height : IComparable
     /// </remarks>
     /// <param name="obj">The <see langword="object"/> to compare.</param>
     /// <returns>
-    /// <see langword="true"/> if the object is equal as described above, or <see
-    /// langword="false"/> otherwise.
+    /// <see langword="true"/> if the object is equal as described above, or <see langword="false"/> otherwise.
     /// </returns>
     public override bool Equals(object? obj) => obj is Height h && h.InCentimeters == InCentimeters;
     /// <summary>
@@ -152,8 +149,7 @@ public class Height : IComparable
     /// solely by the <see cref="InCentimeters">InCentimeters</see> property, its hash code is returned.
     /// </summary>
     /// <returns>
-    /// A pseudo-unique hash code for this object's value, suitable for use in hash tables and
-    /// the like.
+    /// A pseudo-unique hash code for this object's value, suitable for use in hash tables and the like.
     /// </returns>
     public override int GetHashCode() => InCentimeters.GetHashCode();
     /// <summary>
@@ -161,13 +157,13 @@ public class Height : IComparable
     /// </summary>
     /// <param name="obj">The object to compare.</param>
     /// <returns>
-    /// A negative value if this should come before the object, a positive value if it should
-    /// come after (or the other is <see langword="null"/>), or zero if they are equal,
-    /// corresponding precisely to a <see langword="float"/> being compared to <c>obj</c>.
+    /// A negative value if this should come before the object, a positive value if it should come
+    /// after (or the other is <see langword="null"/>), or zero if they are equal, corresponding
+    /// precisely to a <see langword="float"/> being compared to <c>obj</c>.
     /// </returns>
     /// <exception cref="ArgumentException">
-    /// Thrown if <c>obj</c> is non- <see langword="null"/> but is neither a <see
-    /// cref="Height"/> nor a <see langword="decimal"/>.
+    /// Thrown if <c>obj</c> is non- <see langword="null"/> but is neither a <see cref="Height"/>
+    /// nor a <see langword="decimal"/>.
     /// </exception>
     public int CompareTo(object? obj)
     {
@@ -181,8 +177,7 @@ public class Height : IComparable
     }
     /// <summary>
     /// Implements the equality operator between two <see cref="Height"/> instances. Implemented
-    /// using <see cref="Equals(object?)"/>, which states that " <inheritdoc
-    /// cref="Equals(object?)" path="/remarks"/>"
+    /// using <see cref="Equals(object?)"/>, which states that " <inheritdoc cref="Equals(object?)" path="/remarks"/>"
     /// </summary>
     /// <param name="a">The first <c>Height</c> to compare.</param>
     /// <param name="b">The second <c>Height</c> to compare.</param>
@@ -192,10 +187,10 @@ public class Height : IComparable
     /// </returns>
     public static bool operator ==(Height a, Height b) => a.Equals(b);
     /// <summary>
-    /// Implements the inequality operator between two <see cref="Height"/> instances.
-    /// Implemented as the inverse of <see cref="operator ==(Height, Height)"/>, which in turn
-    /// derives equality from <see cref="Equals(object?)"/>, which defines equality as "
-    /// <inheritdoc cref="Equals(object?)" path="/remarks"/>"
+    /// Implements the inequality operator between two <see cref="Height"/> instances. Implemented
+    /// as the inverse of <see cref="operator ==(Height, Height)"/>, which in turn derives equality
+    /// from <see cref="Equals(object?)"/>, which defines equality as " <inheritdoc
+    /// cref="Equals(object?)" path="/remarks"/>"
     /// </summary>
     /// <param name="a">The first <c>Height</c> to compare.</param>
     /// <param name="b">The second <c>Height</c> to compare.</param>
@@ -206,4 +201,7 @@ public class Height : IComparable
     public static bool operator !=(Height a, Height b) => !(a == b);
     public static bool operator >(Height a, Height b) => a.CompareTo(b) > 0;
     public static bool operator <(Height a, Height b) => a.CompareTo(b) < 0;
+
+    [GeneratedRegex("\\d+cm")]
+    private static partial Regex GenerateCentimeterRegex();
 }

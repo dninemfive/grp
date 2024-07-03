@@ -28,13 +28,13 @@ public static class Paths
     /// </summary>
     public static string TsvFile => GrpConfig.Current.Paths.TsvFile.AbsolutePath();
     /// <summary>
-    /// The path to the image used to mask out the watermark from each picrew in order to
-    /// properly join them together.
+    /// The path to the image used to mask out the watermark from each picrew in order to properly
+    /// join them together.
     /// </summary>
     public static string WatermarkToSubtract => GrpConfig.Current.Paths.WatermarkToSubtract.AbsolutePath();
     /// <summary>
-    /// The path to the image which will be appended to credit the picrew author and the group
-    /// for which the image was generated.
+    /// The path to the image which will be appended to credit the picrew author and the group for
+    /// which the image was generated.
     /// </summary>
     public static string WatermarkToAdd => GrpConfig.Current.Paths.WatermarkToAdd.AbsolutePath();
     public static string AlphaMask => "images/mask.png".AbsolutePath();
