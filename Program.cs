@@ -33,9 +33,7 @@ public static class Program
     {
         List<User> users = new();
         foreach (TsvRow row in document.Rows)
-        {
             users.Add(await User.Parse(row));
-        }
         List<User> latestUniqueUsers = new();
         foreach (string discordid in users.Select(x => x.DiscordId).ToHashSet())
         {
@@ -45,13 +43,10 @@ public static class Program
         }
         latestUniqueUsers = latestUniqueUsers.OrderBy(x => x.Name).ToList();
         foreach (User user in latestUniqueUsers.OrderByDescending(x => x.Height))
-        {
             Console.WriteLine(user);
-        }
-        int rowCt = (int)Math.Ceiling(latestUniqueUsers.Count / (float)GrpConfig.Current.MaxUsersPerRow);
         return latestUniqueUsers.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - _maxNormalAlpha))
                                 .ThenByDescending(x => x.Height)
-                                .Chunk(rowCt);
+                                .Chunk(GrpConfig.Current.MaxUsersPerRow);
     }
     private static void ConstructImage(IEnumerable<IEnumerable<User>> rows)
     {
