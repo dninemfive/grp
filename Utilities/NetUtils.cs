@@ -14,6 +14,7 @@ public static class NetUtils
     /// href="https://learn.microsoft.com/en-us/dotnet/api/system.net.http.httpclient?view=net-8.0#instancing">documentation</see>,
     /// only one <see cref="HttpClient"/> is meant to be used per application.
     /// </remarks>
+    // todo: utl method which creates an HttpClient with a custom user-agent
     public static readonly HttpClient Client = new();
     /// <summary>
     /// Attempts to download a file to the <see cref="Images.ImageFolderPath">default image
@@ -27,12 +28,11 @@ public static class NetUtils
     /// <returns>
     /// The path to the downloaded file, if successfully downloaded, or <see langword="null"/> otherwise.
     /// </returns>
-    public static async Task<string?> Download(string url, string? fileName = null)
+    public static async Task<string?> Download(string url, string? fileName = null, bool log = true)
     {
         fileName ??= Path.GetFileName(url);
         string targetPath = Path.Join(Paths.ImageFolder, fileName);
-        //Console.Write($"Downloading {url} to {targetPath}... ");
-        Console.Write($"{fileName,-32}");
+        if(log) Console.Write($"Downloading {url} to {fileName,-32}... ");
         try
         {
             using HttpResponseMessage response = await Client.GetAsync(url);

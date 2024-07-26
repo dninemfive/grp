@@ -6,7 +6,8 @@
     "tsvFile": "data.tsv",
     "watermarkToSubtract": "watermark_subtract.png",
     "watermarkToAdd": "watermark_add.png",
-    "googleAuth": "google auth.json.secret"
+    "googleAuth": "google auth.json.secret",
+    "dataFolder": "data"
   },
   "debug": false,
   "savePerUserImages": false,

@@ -13,11 +13,10 @@ public static class IoUtils
     /// <returns>
     /// An absolute path corresponding to the <c>relativePath</c> located within the default image folder.
     /// </returns>
-    public static string AbsoluteOrInImageFolder(this string path) => Path.IsPathFullyQualified(path) switch
-    {
-        true => path,
-        false => Path.Join(Paths.ImageFolder, path)
-    };
+    public static string AbsoluteOrInImageFolder(this string path)
+        => path.AbsoluteOrIn(Paths.ImageFolder);
+    public static string AbsoluteOrIn(this string path, string basePath)
+        => Path.IsPathFullyQualified(path) ? path : Path.Join(basePath, path);
     /// <summary>
     /// Loads an image at the specified <c>path</c>. If the <c>path</c> is relative, looks for the
     /// image in the <see cref="Paths.ImageFolder">default image folder</see>.

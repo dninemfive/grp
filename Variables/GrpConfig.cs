@@ -19,6 +19,8 @@ internal class GrpConfig
         [JsonInclude]
         public string DebugFolder = "debug";
         [JsonInclude]
+        public string DataFolder = "data";
+        [JsonInclude]
         public string TsvFile = "data.tsv";
         [JsonInclude]
         public string WatermarkToSubtract = "watermark_subtract.png";
