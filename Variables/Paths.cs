@@ -36,5 +36,5 @@ public static class Paths
     /// which the image was generated.
     /// </summary>
     public static string WatermarkToAdd => GrpConfig.Current.Paths.WatermarkToAdd.AbsoluteOrIn(DataFolder);
-    public static string AlphaMask => "images/mask.png".AbsoluteOrIn(DataFolder);
+    public static string AlphaMask => "mask.png".AbsoluteOrIn(DataFolder);
 }

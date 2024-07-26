@@ -15,13 +15,9 @@ internal class User
     /// </summary>
     public DateTime Timestamp { get; private set; }
     /// <summary>
-    /// The user's discord ID, parsed to separate the name and discriminator number.
-    /// </summary>
-    public (string name, int discriminator) SplitId { get; private set; }
-    /// <summary>
     /// The user's canonical discord ID, as it shows up in Discord proper.
     /// </summary>
-    public string DiscordId => $"{SplitId.name}#{SplitId.discriminator.ToString().PadLeft(4, '0')}";
+    public string DiscordId { get; private set; }
     /// <summary>
     /// The user's preferred name when describing the group photo.
     /// </summary>
@@ -56,9 +52,8 @@ internal class User
     private User(TsvRow row)
     {
         Timestamp = DateTime.ParseExact(row["timestamp"]!.Trim(), "M/d/yyyy H:mm:ss", CultureInfo.InvariantCulture);
-        string[] split = row["discord id"]!.Split("#");
-        SplitId = (split[0], int.Parse(split[1]));
-        Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : SplitId.name;
+        DiscordId = row["discord id"]!;
+        Name = !string.IsNullOrEmpty(row["display name"]?.Trim()) ? row["display name"]! : DiscordId;
         Url = row["url"]!;
         Height = Height.Parse(row["height"]!).Clamp(Height.Minimum, Height.Maximum);
     }
@@ -76,7 +71,7 @@ internal class User
             File.Delete(Path.Join(Paths.ImageFolder, FileName));
             throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
         }
-        ExcessAlpha = Image.MultiplyAlpha(Images.AlphaMask, SplitId.name).AlphaSum();
+        ExcessAlpha = Image.MultiplyAlpha(Images.AlphaMask, DiscordId).AlphaSum();
         Image = Image.Mask(Images.WatermarkMask);
         Image.Mutate((context) => context.Resize(new ResizeOptions()
         {
