@@ -1,4 +1,4 @@
-﻿namespace d9.grp;
+﻿namespace d9.grp.lib;
 
 /// <summary>
 /// Utilities relating to saving and loading files.

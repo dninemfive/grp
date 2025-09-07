@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 #pragma warning disable IDE0079 // "remove unnecessary suppression": CS8618 is actually necessary lol
 #pragma warning disable CS8618 // "must have non-null value": initialized by JSON loading
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 internal class GrpConfig
 {

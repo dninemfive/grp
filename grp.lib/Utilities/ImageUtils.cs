@@ -3,7 +3,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Utilities related to processing <see

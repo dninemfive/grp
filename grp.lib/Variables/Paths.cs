@@ -1,6 +1,6 @@
 ﻿using d9.utl;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Useful paths for this program.

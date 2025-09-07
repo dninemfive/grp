@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grp", "grp.lib/grp.csproj", "{0CD8B327-FD05-498D-995D-A3297119A1E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grp.lib", "grp.lib\grp.lib.csproj", "{0CD8B327-FD05-498D-995D-A3297119A1E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "grp.bot", "grp.bot\grp.bot.csproj", "{82347728-6A89-420A-8961-49566F0616CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{0CD8B327-FD05-498D-995D-A3297119A1E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CD8B327-FD05-498D-995D-A3297119A1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CD8B327-FD05-498D-995D-A3297119A1E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82347728-6A89-420A-8961-49566F0616CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82347728-6A89-420A-8961-49566F0616CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82347728-6A89-420A-8961-49566F0616CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82347728-6A89-420A-8961-49566F0616CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

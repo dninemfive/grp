@@ -15,9 +15,10 @@ public class PicrewGroupPhotoModule : InteractionModuleBase<SocketInteractionCon
     {
 
     }
+    // todo: variant which allows uploading an image. requires admin approval before being added.
     [SlashCommand("update", "Updates your image for the specified picrew.")]
-    public async Task Update([Summary(description: "The link to the output image of your completed picrew for this server.")] string link,
-                             [Summary(description: "Your height, used to scale your picrew in group photos.")] string? height,
+    public async Task Update([Summary(description: "The link to the output image of your completed picrew for this server.")] string? link = null,
+                             [Summary(description: "Your height, used to scale your picrew in group photos.")] string? height = null,
                              [Summary(description: "If true, this image will only be used for group photos in this server."
                                                  + "If false, it will be used for this bot in all servers you're in.")] bool serverSpecific = false)
     {

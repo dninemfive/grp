@@ -8,4 +8,8 @@
     <RootNamespace>d9.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="3.18.0" />
+  </ItemGroup>
+
 </Project>

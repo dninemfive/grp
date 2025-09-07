@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Useful data for the watermark removal process, for now.

@@ -15,6 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="utl">
+      <HintPath>..\..\..\misc\utl\utl\bin\Release\net8.0\utl.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="SixLabors.ImageSharp" />
     <Using Include="SixLabors.ImageSharp.PixelFormats" />
   </ItemGroup>

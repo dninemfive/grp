@@ -1,6 +1,6 @@
 ﻿using d9.utl;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Utilities related to printing various values to the console.
@@ -14,4 +14,6 @@ public static class StringUtils
     /// <param name="hash">A hash vaguely related to the file being created.</param>
     /// <returns>A string which can be used as a filename for the file being created.</returns>
     public static string DebugName(string methodName, int hash) => $"debug/{methodName}_{DateTime.Now.FileNameFormat()}_{hash}.png";
+    public static string FileNameSafe(this string s)
+        => s.Select(x => Path.GetInvalidFileNameChars().Contains(x) ? '_' : x).Join();
 }

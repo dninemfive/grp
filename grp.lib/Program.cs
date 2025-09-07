@@ -27,8 +27,6 @@ public static class Program
             Console.WriteLine(s);
         return document;
     }
-    // determined by inspection
-    private const long _maxNormalAlpha = 2137666;
     private static async Task<IEnumerable<IEnumerable<User>>> LoadUsersFrom(TsvDocument document)
     {
         List<User> users = new();
@@ -48,27 +46,5 @@ public static class Program
                                 .ThenByDescending(x => x.Height)
                                 .Chunk(GrpConfig.Current.MaxUsersPerRow);
     }
-    private static void ConstructImage(IEnumerable<IEnumerable<User>> rows)
-    {
-        List<Image> rowImages = new();
-        int rowCt = rows.Count();
-        string imageDescription = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";
-        foreach (IEnumerable<User> row in rows)
-        {
-            List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
-            rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.80f));
-            string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
-            imageDescription += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
-        }
-        if (GrpConfig.Current.SaveDescToFile)
-            File.WriteAllText(Path.Combine(Paths.ImageFolder, "result.txt"), imageDescription);
-        if (GrpConfig.Current.CopyDescToClipboard)
-            TextCopy.ClipboardService.SetText(imageDescription);
-        using Image result = ImageUtils.Merge(new Image[]
-        {
-            Images.WatermarkToAdd,
-            rowImages.Merge(MergeDirection.TopBottom, 0.42f)
-        }, MergeDirection.BottomTop, 0f);
-        result.SaveTo("result.png");
-    }
+    
 }

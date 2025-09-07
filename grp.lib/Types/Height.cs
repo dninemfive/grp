@@ -1,7 +1,7 @@
 ﻿using d9.utl;
 using System.Text.RegularExpressions;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Parses a string of in the format <c><em>x</em>' <em>y</em>"</c> or <c><em>z</em> cm</c> into a
@@ -69,10 +69,10 @@ public partial class Height : IComparable
         /// <returns>
         /// <see langword="true"/> if the parse attempt was successful, or <see langword="false"/> otherwise.
         /// </returns>
-        public bool TryParse(string s, out Height? result)
+        public bool TryParse(string? s, out Height? result)
         {
             result = null;
-            if (!Regex.IsMatch(s))
+            if (s is null || !Regex.IsMatch(s))
                 return false;
             try
             {
@@ -124,13 +124,13 @@ public partial class Height : IComparable
     /// A successfully parsed <see cref="Height"/>, or <see cref="Default"/> if no parse attempts
     /// were successful.
     /// </returns>
-    public static Height Parse(string s)
+    public static Height? Parse(string? s)
     {
         foreach (Parser parser in _parsers)
             if (parser.TryParse(s, out Height? result) && result is not null)
                 return result;
         Console.WriteLine($"Failed to parse {s} using any of the existing parsers.");
-        return Default;
+        return null;
     }
     /// <summary>
     /// Compares a <see cref="Height"/> to an arbitrary other object for equality.

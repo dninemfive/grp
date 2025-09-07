@@ -2,7 +2,7 @@
 using SixLabors.ImageSharp.Processing;
 using System.Globalization;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 /// <summary>
 /// Represents a user constructed from a <see cref="TsvRow">row</see> of a <see cref="TsvDocument"/>.

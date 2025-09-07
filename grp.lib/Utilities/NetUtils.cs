@@ -1,6 +1,6 @@
 ﻿using SixLabors.ImageSharp;
 
-namespace d9.grp;
+namespace d9.grp.lib;
 
 public static class NetUtils
 {
