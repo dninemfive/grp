@@ -6,7 +6,6 @@ public class GroupPhotoGenerator
     private const long _maxNormalAlpha = 2137666;
     public bool SaveDescToFile = true;
     public bool CopyDescToClipboard = true;
-    public async Task<IEnumerable<IEnumerable<User>>>
     public Image ConstructImage(IEnumerable<IEnumerable<User>> rows, out string description)
     {
         List<Image> rowImages = new();
