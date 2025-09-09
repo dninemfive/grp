@@ -38,35 +38,12 @@ public class ImageProcessor(string imageFolder, IEnumerable<(int x, int y)> wate
         image = image.Autocrop(AutocropType.Vertical);
         await PositionInFrame(image);
     }
-    public async Task<Image?> GetImage(string imageUrl)
+    public async Task<ImageInfo?> Process(Image image, Height height)
     {
-        if (ImageUrl is null)
-            return null;
-        Image result = await NetUtils.DownloadImage(ImageUrl, FileName);
-        if (result is null)
-            return result;
-        // todo: this should be its own method but idk where to put it
-        if (result.Width != 600 || result.Height != 600)
-        {
-            File.Delete(Path.Join(ImageFolder, FileName));
-            throw new Exception($"Image at {Url} for user {DiscordId} was not the right size!");
-        }
-        ExcessAlpha = result.MultiplyAlpha(Images.AlphaMask, DiscordId).AlphaSum();
-        result = result.Mask(WatermarkMask);
-        result.Mutate((context) => context.Resize(new ResizeOptions()
-        {
-            Mode = ResizeMode.Stretch,
-            Position = AnchorPositionMode.Bottom,
-            Size = (Size)(result.Size * Height.Ratio)
-        }));
-        result = result.Autocrop(AutocropType.Vertical);
-        result.Mutate((context) => context.Resize(new ResizeOptions()
-        {
-            Mode = ResizeMode.BoxPad,
-            Position = AnchorPositionMode.Bottom,
-            Size = new((int)(Height.Maximum.Ratio * 600), result.Height)
-        }));
-        if (GrpConfig.Current.SavePerUserImages)
-            result.SaveTo(Path.Join(Paths.DebugFolder, FileName));
+        long excessAlpha = await GetExcessAlpha(image);
+        image = await RemoveWatermark(image);
+        await ResizeForHeight(image, height);
+        image = image.Autocrop(AutocropType.Vertical);
+        await PositionInFrame(image);
     }
 }

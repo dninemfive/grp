@@ -1,9 +1,7 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿namespace d9.grp.lib;
 
-namespace d9.grp.lib;
-public class User(string id, IEnumerable<UserUpdate> updates)
-{
-    public string Id => id;
-    internal IEnumerable<UserUpdate> Updates => updates;
-
-}
+/// <summary>
+/// Represents a concrete instance of a participant in a group "photo". Contains only information
+/// required to render the image and generate a description.
+/// </summary>
+public record User(string Name, string ImagePath, Height? Height = null);
