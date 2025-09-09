@@ -28,22 +28,15 @@ public class ImageProcessor(string imageFolder, IEnumerable<(int x, int y)> wate
             Size = new((int)(Height.Maximum.Ratio * 600), image.Height)
         })));
     }
-    public async Task ProcessImage(ImageInfo info)
+    public async Task<UserImage> Process(User user, Image? image)
     {
-        (Image image, UserUpdate update) = info;
-        Height height = Height.Parse(update.Height) ?? Height.Default;
+        image ??= IoUtils.LoadImage(user.ImagePath);
+        Height height = user.Height ?? Height.Default;
         long excessAlpha = await GetExcessAlpha(image);
         image = await RemoveWatermark(image);
         await ResizeForHeight(image, height);
         image = image.Autocrop(AutocropType.Vertical);
         await PositionInFrame(image);
-    }
-    public async Task<ImageInfo?> Process(Image image, Height height)
-    {
-        long excessAlpha = await GetExcessAlpha(image);
-        image = await RemoveWatermark(image);
-        await ResizeForHeight(image, height);
-        image = image.Autocrop(AutocropType.Vertical);
-        await PositionInFrame(image);
+        return new(user, image, excessAlpha);
     }
 }

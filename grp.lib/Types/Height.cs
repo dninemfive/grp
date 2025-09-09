@@ -21,8 +21,8 @@ public partial class Height : IComparable
     /// A list of <see cref="Parser"/> s which will be evaluated by <see cref="Parse(string)"/> in
     /// sequence to try and construct a height from a string.
     /// </summary>
-    private static readonly List<Parser> _parsers = new()
-    {
+    private static readonly List<Parser> _parsers =
+    [
         new(FeetAndInches, delegate(string s)
         {
             string[] split = s.Without(Constants.Quotes).Split(Constants.Apostrophes.ToArray());
@@ -31,7 +31,7 @@ public partial class Height : IComparable
             return new(feet, inches);
         }),
         new(Centimeters, s => new(float.Parse(s.Replace("cm",""))))
-    };
+    ];
     /// <summary>
     /// A wrapper for the logic of parsing things.
     /// </summary>

@@ -1,4 +1,6 @@
-﻿namespace d9.grp.lib;
+﻿using d9.utl;
+
+namespace d9.grp.lib;
 public class GroupPhotoGenerator
 {
     // determined by inspection
@@ -6,16 +8,27 @@ public class GroupPhotoGenerator
     private const long _maxNormalAlpha = 2137666;
     public bool SaveDescToFile = true;
     public bool CopyDescToClipboard = true;
-    public Image ConstructImage(IEnumerable<IEnumerable<User>> rows, out string description)
+    public int MaxUsersPerRow;
+    public IEnumerable<IEnumerable<UserImage>> Sort(IEnumerable<UserImage> users)
+    {
+        foreach (IEnumerable<UserImage> row in users.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - _maxNormalAlpha))
+                                                    .ThenByDescending(x => x.User.Height)
+                                                    .Chunk(MaxUsersPerRow))
+        {
+            yield return row.OrderBy(x => x.User.Name);
+        }
+    }
+    public Image ConstructImage(IEnumerable<UserImage> users, out string description)
+        => ConstructImage(Sort(users), out description);
+    public Image ConstructImage(IEnumerable<IEnumerable<UserImage>> rows, out string description)
     {
         List<Image> rowImages = new();
         int rowCt = rows.Count();
         description = $"From {(rowCt > 1 ? "top to bottom, " : "")}left to right: ";
-        foreach (IEnumerable<User> row in rows)
+        foreach (IEnumerable<UserImage> row in rows)
         {
-            List<User> orderedRow = row.OrderBy(x => x.Name).ToList();
-            rowImages.Add(orderedRow.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.80f));
-            string rowDescription = orderedRow.Select(x => $"{x.Name}").Aggregate((x, y) => $"{x}, {y}");
+            rowImages.Add(row.Select(x => x.Image!).Merge(MergeDirection.RightLeft, 0.80f));
+            string rowDescription = row.Select(x => $"{x.User.Name}").JoinWithDelimiter(", ");
             description += $"{(rowCt > 1 ? "\n" : "")}{rowDescription}";
         }
         using Image result = ImageUtils.Merge(

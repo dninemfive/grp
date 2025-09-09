@@ -1,6 +1,4 @@
 ﻿using d9.utl;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
 namespace d9.grp.lib;
