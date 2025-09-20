@@ -10,16 +10,13 @@ public class GroupPhotoGenerator
     public bool CopyDescToClipboard = true;
     public int MaxUsersPerRow;
     public IEnumerable<IEnumerable<UserImage>> Sort(IEnumerable<UserImage> users)
-    {
-        foreach (IEnumerable<UserImage> row in users.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - _maxNormalAlpha))
-                                                    .ThenByDescending(x => x.User.Height)
-                                                    .Chunk(MaxUsersPerRow))
-        {
-            yield return row.OrderBy(x => x.User.Name);
-        }
-    }
+    => users.OrderByDescending(x => MathF.Max(0, x.ExcessAlpha - _maxNormalAlpha))
+            .ThenByDescending(x => x.User.Height)
+            .ThenBy(x => x.User.Name)
+            .Chunk(MaxUsersPerRow);
     public Image ConstructImage(IEnumerable<UserImage> users, out string description)
         => ConstructImage(Sort(users), out description);
+    // todo: description should be generated separately
     public Image ConstructImage(IEnumerable<IEnumerable<UserImage>> rows, out string description)
     {
         List<Image> rowImages = new();
